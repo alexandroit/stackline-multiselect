@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Stackline Multiselect</title>
+    <link rel="stylesheet" href="src/stackline-multiselect.css">
+    <link rel="stylesheet" href="src/demo.css">
+  </head>
+  <body>
+    <main class="page">
+      <header class="topbar">
+        <p class="eyebrow">Vanilla JavaScript</p>
+        <h1>@stackline/multiselect 1.0.0</h1>
+      </header>
+
+      <section class="skin-section skin-switcher-section custom-skin-sample">
+        <div class="section-heading">
+          <p class="eyebrow">Settings-only theme switch</p>
+          <h2>Skin switcher</h2>
+        </div>
+
+        <div id="theme-buttons" class="theme-buttons"></div>
+
+        <div class="case-grid">
+          <article class="case-card case-card-wide">
+            <h3>Updates only settings.theme / settings.skin</h3>
+            <div id="skin-switcher"></div>
+            <p id="settings-preview" class="settings-preview"></p>
+          </article>
+        </div>
+      </section>
+
+      <div id="sections"></div>
+
+      <section class="activity">
+        <h2>Events</h2>
+        <div id="events"></div>
+      </section>
+    </main>
+
+    <script src="src/stackline-multiselect.js"></script>
+    <script src="src/demo.js"></script>
+  </body>
+</html>

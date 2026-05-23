@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Stackline Multiselect Direct Example</title>
+    <link rel="stylesheet" href="./stackline-multiselect.css">
+    <style>
+      body {
+        margin: 0;
+        background: #eef2f6;
+        color: #172033;
+        font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      main {
+        width: min(760px, calc(100% - 32px));
+        margin: 0 auto;
+        padding: 32px 0;
+      }
+
+      h1 {
+        margin: 0 0 18px;
+        font-size: 28px;
+        letter-spacing: 0;
+      }
+
+      .panel {
+        padding: 18px;
+        border: 1px solid #d8dee8;
+        border-radius: 8px;
+        background: #ffffff;
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 14px;
+      }
+
+      .actions button {
+        min-height: 34px;
+        padding: 0 12px;
+        border: 1px solid #d8dee8;
+        border-radius: 6px;
+        background: #ffffff;
+        cursor: pointer;
+        font: inherit;
+        font-weight: 700;
+      }
+
+      .stackline-dropdown.theme-brand {
+        --stackline-ms-primary: #7c3aed;
+        --stackline-ms-primary-soft: rgba(124, 58, 237, 0.14);
+        --stackline-ms-surface: #ffffff;
+        --stackline-ms-surface-soft: #f5f3ff;
+        --stackline-ms-outline: #c4b5fd;
+        --stackline-ms-outline-strong: #7c3aed;
+        --stackline-ms-on-surface: #22183f;
+        --stackline-ms-on-surface-muted: #6b5d80;
+        --stackline-ms-chip-bg: #ede9fe;
+        --stackline-ms-chip-text: #5b21b6;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Stackline Multiselect Direct Example</h1>
+      <section class="panel">
+        <div class="actions">
+          <button type="button" data-theme="classic">classic</button>
+          <button type="button" data-theme="material">material</button>
+          <button type="button" data-theme="dark">dark</button>
+          <button type="button" data-theme="brand">brand</button>
+        </div>
+        <div id="countries"></div>
+      </section>
+    </main>
+
+    <script src="./stackline-multiselect.js"></script>
+    <script>
+      var dropdown = new StacklineMultiSelect("#countries", {
+        data: [
+          { id: 1, itemName: "Brazil" },
+          { id: 2, itemName: "Canada" },
+          { id: 3, itemName: "Portugal" },
+          { id: 4, itemName: "United States" },
+          { id: 5, itemName: "Germany" }
+        ],
+        selected: [
+          { id: 2, itemName: "Canada" },
+          { id: 3, itemName: "Portugal" }
+        ],
+        settings: {
+          text: "Select countries",
+          enableSearchFilter: true,
+          theme: "material",
+          skin: "material",
+          badgeShowLimit: 2
+        }
+      });
+
+      Array.prototype.forEach.call(document.querySelectorAll("[data-theme]"), function (button) {
+        button.addEventListener("click", function () {
+          dropdown.setTheme(button.getAttribute("data-theme"));
+        });
+      });
+    </script>
+  </body>
+</html>
