@@ -1,6 +1,6 @@
 # Stackline Multiselect Direct Download
 
-This folder contains the direct browser files for `@stackline/multiselect@1.0.0`.
+This folder contains the direct browser files for `@stackline/multiselect@1.0.1`.
 
 ## Files
 

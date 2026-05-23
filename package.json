@@ -1,15 +1,10 @@
 {
   "name": "@stackline/multiselect",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Vanilla JavaScript multiselect dropdown with Stackline skins.",
   "main": "src/stackline-multiselect.js",
   "style": "src/stackline-multiselect.css",
   "unpkg": "dist/stackline-multiselect.js",
-  "scripts": {
-    "build:direct": "mkdir -p dist && rm -f dist/stackline-multiselect-*.zip && cp src/stackline-multiselect.js dist/stackline-multiselect.js && cp src/stackline-multiselect.css dist/stackline-multiselect.css && (cd dist && zip -q -j stackline-multiselect-1.0.0.zip stackline-multiselect.js stackline-multiselect.css README.md direct-example.html)",
-    "start": "python3 -m http.server 4310 --bind 0.0.0.0",
-    "test": "node --check src/stackline-multiselect.js && node --check src/demo.js"
-  },
   "keywords": [
     "stackline",
     "multiselect",
@@ -28,8 +23,8 @@
   "license": "MIT",
   "files": [
     "dist",
-    "src",
-    "index.html",
+    "src/stackline-multiselect.js",
+    "src/stackline-multiselect.css",
     "LICENSE",
     "README.md"
   ]

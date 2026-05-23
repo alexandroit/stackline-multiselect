@@ -10,18 +10,12 @@ It does not require Angular, React, Vue, a bundler, or any runtime dependency.
 npm install @stackline/multiselect
 ```
 
-Verdaccio test registry:
-
-```bash
-npm install @stackline/multiselect@1.0.0 --registry http://192.168.3.52:4873 --save-exact
-```
-
 ## Direct Download
 
 Use the direct download when you do not want npm:
 
 ```text
-https://github.com/alexandroit/stackline-multiselect/releases/download/v1.0.0/stackline-multiselect-1.0.0.zip
+https://github.com/alexandroit/stackline-multiselect/releases/download/v1.0.1/stackline-multiselect-1.0.1.zip
 ```
 
 Extract the archive and copy these files into your project:
@@ -29,12 +23,6 @@ Extract the archive and copy these files into your project:
 ```text
 stackline-multiselect.css
 stackline-multiselect.js
-```
-
-Local direct download while the demo server is running:
-
-```text
-http://192.168.3.52:4310/dist/stackline-multiselect-1.0.0.zip
 ```
 
 ## Quick Start
@@ -195,26 +183,6 @@ new StacklineMultiSelect("#colors", {
     return '<strong>' + item.itemName + '</strong><small>' + item.detail + '</small>';
   }
 });
-```
-
-## Local Development
-
-```bash
-npm test
-npm run build:direct
-npm start
-```
-
-Demo URL:
-
-```text
-http://192.168.3.52:4310/
-```
-
-Direct example:
-
-```text
-http://192.168.3.52:4310/dist/direct-example.html
 ```
 
 ## License
