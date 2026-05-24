@@ -1,7 +1,7 @@
 {
   "name": "@stackline/multiselect",
-  "version": "1.0.1",
-  "description": "Vanilla JavaScript multiselect dropdown with Stackline skins.",
+  "version": "1.0.2",
+  "description": "Framework-agnostic vanilla JavaScript multiselect dropdown with Stackline skins, search, grouping, templates, and direct browser usage.",
   "main": "src/stackline-multiselect.js",
   "style": "src/stackline-multiselect.css",
   "unpkg": "dist/stackline-multiselect.js",
@@ -10,16 +10,20 @@
     "multiselect",
     "dropdown",
     "vanilla",
-    "javascript"
+    "javascript",
+    "select",
+    "search",
+    "skins",
+    "ui"
   ],
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/alexandroit/stackline-multiselect.git"
+    "url": "git+https://github.com/alexandroit/stackline-multiselect.git"
   },
   "bugs": {
     "url": "https://github.com/alexandroit/stackline-multiselect/issues"
   },
-  "homepage": "https://github.com/alexandroit/stackline-multiselect#readme",
+  "homepage": "https://alexandro.net/docs/multiselect/",
   "license": "MIT",
   "files": [
     "dist",

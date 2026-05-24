@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta
+      name="description"
+      content="@stackline/multiselect is a framework-agnostic vanilla JavaScript multiselect dropdown with skins, search, grouping, templates, and direct browser usage."
+    >
+    <title>@stackline/multiselect Documentation</title>
+    <link rel="stylesheet" href="./stackline-multiselect.css">
+    <link rel="stylesheet" href="./site.css">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6353624842390947" crossorigin="anonymous"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-3KQ9KECXR9"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-3KQ9KECXR9');
+    </script>
+  </head>
+  <body>
+    <main class="page docs-page">
+      <header class="topbar docs-header">
+        <div>
+          <p class="eyebrow">Vanilla JavaScript</p>
+          <h1>@stackline/multiselect</h1>
+          <p class="lead">Framework-agnostic multiselect dropdown with search, grouping, templates, and switchable skins.</p>
+        </div>
+        <nav class="docs-links" aria-label="Package links">
+          <a href="https://www.npmjs.com/package/@stackline/multiselect">npm</a>
+          <a href="https://github.com/alexandroit/stackline-multiselect">GitHub</a>
+          <a href="https://github.com/alexandroit/stackline-multiselect/releases/download/v1.0.2/stackline-multiselect-1.0.2.zip">Download</a>
+        </nav>
+      </header>
+
+      <section class="docs-band quickstart-band">
+        <div class="quickstart-grid">
+          <article>
+            <p class="eyebrow">Install</p>
+            <h2>Production package</h2>
+            <pre><code>npm install @stackline/multiselect</code></pre>
+          </article>
+          <article>
+            <p class="eyebrow">Pinned</p>
+            <h2>Current release</h2>
+            <pre><code>npm install @stackline/multiselect@1.0.2 --save-exact</code></pre>
+          </article>
+          <article>
+            <p class="eyebrow">Browser</p>
+            <h2>Direct files</h2>
+            <pre><code>&lt;link rel="stylesheet" href="./stackline-multiselect.css"&gt;
+&lt;script src="./stackline-multiselect.js"&gt;&lt;/script&gt;</code></pre>
+          </article>
+        </div>
+      </section>
+
+      <section class="skin-section skin-switcher-section custom-skin-sample">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Live demo</p>
+            <h2>Settings-only skin switcher</h2>
+          </div>
+        </div>
+
+        <div id="theme-buttons" class="theme-buttons"></div>
+
+        <div class="case-grid">
+          <article class="case-card case-card-wide">
+            <h3>Updates only settings.theme and settings.skin</h3>
+            <div id="skin-switcher"></div>
+            <p id="settings-preview" class="settings-preview"></p>
+          </article>
+        </div>
+      </section>
+
+      <section class="docs-band">
+        <div class="docs-copy">
+          <p class="eyebrow">Usage</p>
+          <h2>Plain HTML setup</h2>
+          <pre><code>&lt;link rel="stylesheet" href="./stackline-multiselect.css"&gt;
+&lt;div id="countries"&gt;&lt;/div&gt;
+&lt;script src="./stackline-multiselect.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+  var dropdown = new StacklineMultiSelect("#countries", {
+    data: [
+      { id: 1, itemName: "Brazil" },
+      { id: 2, itemName: "Canada" },
+      { id: 3, itemName: "Portugal" }
+    ],
+    selected: [{ id: 2, itemName: "Canada" }],
+    settings: {
+      text: "Select countries",
+      enableSearchFilter: true,
+      theme: "material",
+      skin: "material",
+      showClearAll: true
+    }
+  });
+&lt;/script&gt;</code></pre>
+        </div>
+      </section>
+
+      <section class="docs-band settings-band">
+        <div>
+          <p class="eyebrow">Configuration</p>
+          <h2>Core settings</h2>
+        </div>
+        <div class="settings-table-wrap">
+          <table class="settings-table">
+            <thead>
+              <tr>
+                <th>Setting</th>
+                <th>Default</th>
+                <th>Purpose</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td><code>singleSelection</code></td><td><code>false</code></td><td>Use one selected item.</td></tr>
+              <tr><td><code>enableSearchFilter</code></td><td><code>true</code></td><td>Show the search field.</td></tr>
+              <tr><td><code>enableCheckAll</code></td><td><code>true</code></td><td>Show select all and clear all.</td></tr>
+              <tr><td><code>showClearAll</code></td><td><code>true</code></td><td>Show the global remove button.</td></tr>
+              <tr><td><code>badgeShowLimit</code></td><td><code>4</code></td><td>Show a counter after visible chips.</td></tr>
+              <tr><td><code>groupBy</code></td><td><code>""</code></td><td>Group options by a field name.</td></tr>
+              <tr><td><code>limitSelection</code></td><td><code>0</code></td><td>Limit selected items.</td></tr>
+              <tr><td><code>theme</code> / <code>skin</code></td><td><code>"classic"</code></td><td>Choose the visual skin.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="docs-band">
+        <div class="docs-copy">
+          <p class="eyebrow">Custom skins</p>
+          <h2>Create any skin name</h2>
+          <pre><code>dropdown.setTheme("brand");</code></pre>
+          <pre><code>.stackline-dropdown.theme-brand {
+  --stackline-ms-primary: #7c3aed;
+  --stackline-ms-primary-soft: rgba(124, 58, 237, 0.14);
+  --stackline-ms-surface: #ffffff;
+  --stackline-ms-surface-soft: #f5f3ff;
+  --stackline-ms-outline: #c4b5fd;
+  --stackline-ms-outline-strong: #7c3aed;
+  --stackline-ms-on-surface: #22183f;
+  --stackline-ms-on-surface-muted: #6b5d80;
+  --stackline-ms-chip-bg: #ede9fe;
+  --stackline-ms-chip-text: #5b21b6;
+}</code></pre>
+        </div>
+      </section>
+
+      <div id="sections"></div>
+
+      <section class="activity">
+        <h2>Events</h2>
+        <div id="events"></div>
+      </section>
+    </main>
+
+    <script src="./stackline-multiselect.js"></script>
+    <script src="./main.js"></script>
+  </body>
+</html>

@@ -1,6 +1,12 @@
 # Stackline Multiselect Direct Download
 
-This folder contains the direct browser files for `@stackline/multiselect@1.0.1`.
+This folder contains the direct browser files for `@stackline/multiselect@1.0.2`.
+
+Documentation and live demo:
+
+```text
+https://alexandro.net/docs/multiselect/
+```
 
 ## Files
 
