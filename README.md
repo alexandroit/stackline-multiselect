@@ -9,9 +9,9 @@
 [![Vanilla JS](https://img.shields.io/badge/Vanilla-JavaScript-f7df1e?style=flat-square&logo=javascript&logoColor=111)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 [![GitHub stars](https://img.shields.io/github/stars/alexandroit/stackline-multiselect.svg?style=flat-square)](https://github.com/alexandroit/stackline-multiselect/stargazers)
 
-**[Documentation & Live Demos](https://alexandro.net/docs/multiselect/)** | **[Direct Download](https://github.com/alexandroit/stackline-multiselect/releases/download/v1.0.3/stackline-multiselect-1.0.3.zip)** | **[npm](https://www.npmjs.com/package/@stackline/multiselect)** | **[Issues](https://github.com/alexandroit/stackline-multiselect/issues)** | **[Repository](https://github.com/alexandroit/stackline-multiselect)**
+**[Documentation & Live Demos](https://alexandro.net/docs/multiselect/)** | **[Direct Download](https://github.com/alexandroit/stackline-multiselect/releases/download/v1.0.4/stackline-multiselect-1.0.4.zip)** | **[npm](https://www.npmjs.com/package/@stackline/multiselect)** | **[Issues](https://github.com/alexandroit/stackline-multiselect/issues)** | **[Repository](https://github.com/alexandroit/stackline-multiselect)**
 
-**Latest npm release:** `1.0.3` for vanilla JavaScript projects
+**Latest npm release:** `1.0.4` for vanilla JavaScript projects
 
 ---
 
@@ -53,18 +53,17 @@ The package ships a single JavaScript file, a single CSS file, built-in skins, a
 
 1. [Vanilla Version Note](#vanilla-version-note)
 2. [Installation](#installation)
-3. [Direct Download](#direct-download)
-4. [Setup](#setup)
-5. [Basic Usage](#basic-usage)
-6. [Official Vanilla Test Matrix](#official-vanilla-test-matrix)
-7. [Settings](#settings)
-8. [Skins and Themes](#skins-and-themes)
-9. [Custom Skins](#custom-skins)
-10. [Custom Templates](#custom-templates)
-11. [Events](#events)
-12. [API](#api)
-13. [Run Locally](#run-locally)
-14. [License](#license)
+3. [Option 1: npm Usage](#option-1-npm-usage)
+4. [Option 2: Direct Download](#option-2-direct-download)
+5. [Official Vanilla Test Matrix](#official-vanilla-test-matrix)
+6. [Settings](#settings)
+7. [Skins and Themes](#skins-and-themes)
+8. [Custom Skins](#custom-skins)
+9. [Custom Templates](#custom-templates)
+10. [Events](#events)
+11. [API](#api)
+12. [Run Locally](#run-locally)
+13. [License](#license)
 
 ## Vanilla Version Note
 
@@ -85,15 +84,75 @@ npm install @stackline/multiselect
 Install the current tested vanilla release exactly:
 
 ```bash
-npm install @stackline/multiselect@1.0.3 --save-exact
+npm install @stackline/multiselect@1.0.4 --save-exact
 ```
 
-## Direct Download
+## Option 1: npm Usage
+
+Use this option first when the project installs packages with npm.
+
+### 1. Load the CSS from `node_modules`
+
+```html
+<link rel="stylesheet" href="./node_modules/@stackline/multiselect/src/stackline-multiselect.css">
+```
+
+If your framework or bundler copies assets into a public folder, keep the same file and adjust only the path.
+
+### 2. Add a mount element
+
+```html
+<div id="countries"></div>
+```
+
+### 3. Load the JavaScript from `node_modules`
+
+```html
+<script src="./node_modules/@stackline/multiselect/src/stackline-multiselect.js"></script>
+```
+
+### 4. Create the dropdown
+
+```html
+<link rel="stylesheet" href="./node_modules/@stackline/multiselect/src/stackline-multiselect.css">
+
+<div id="countries"></div>
+
+<script src="./node_modules/@stackline/multiselect/src/stackline-multiselect.js"></script>
+<script>
+  var dropdown = new StacklineMultiSelect("#countries", {
+    data: [
+      { id: 1, itemName: "Brazil" },
+      { id: 2, itemName: "Canada" },
+      { id: 3, itemName: "Portugal" },
+      { id: 4, itemName: "United States" }
+    ],
+    selected: [{ id: 2, itemName: "Canada" }],
+    settings: {
+      singleSelection: false,
+      text: "Select countries",
+      selectAllText: "Select all",
+      unSelectAllText: "Clear all",
+      enableSearchFilter: true,
+      searchPlaceholderText: "Search",
+      badgeShowLimit: 4,
+      maxHeight: 260,
+      showCheckbox: true,
+      showClearAll: true,
+      noDataLabel: "No data",
+      theme: "classic",
+      skin: "classic"
+    }
+  });
+</script>
+```
+
+## Option 2: Direct Download
 
 Use the direct download when your project does not use npm:
 
 ```text
-https://github.com/alexandroit/stackline-multiselect/releases/download/v1.0.3/stackline-multiselect-1.0.3.zip
+https://github.com/alexandroit/stackline-multiselect/releases/download/v1.0.4/stackline-multiselect-1.0.4.zip
 ```
 
 Extract the archive and copy these files into your public assets:
@@ -104,39 +163,7 @@ stackline-multiselect.js
 direct-example.html
 ```
 
-## Setup
-
-### 1. Add the stylesheet
-
-```html
-<link rel="stylesheet" href="./stackline-multiselect.css">
-```
-
-When installing with npm, reference the package file or copy it into your app assets:
-
-```html
-<link rel="stylesheet" href="./node_modules/@stackline/multiselect/src/stackline-multiselect.css">
-```
-
-### 2. Add a mount element
-
-```html
-<div id="countries"></div>
-```
-
-### 3. Add the browser script
-
-```html
-<script src="./stackline-multiselect.js"></script>
-```
-
-For npm installs:
-
-```html
-<script src="./node_modules/@stackline/multiselect/src/stackline-multiselect.js"></script>
-```
-
-## Basic Usage
+Then reference the copied files:
 
 ```html
 <link rel="stylesheet" href="./stackline-multiselect.css">

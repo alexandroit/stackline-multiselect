@@ -30,7 +30,7 @@
         <nav class="docs-links" aria-label="Package links">
           <a href="https://www.npmjs.com/package/@stackline/multiselect">npm</a>
           <a href="https://github.com/alexandroit/stackline-multiselect">GitHub</a>
-          <a href="https://github.com/alexandroit/stackline-multiselect/releases/download/v1.0.3/stackline-multiselect-1.0.3.zip">Download</a>
+          <a href="https://github.com/alexandroit/stackline-multiselect/releases/download/v1.0.4/stackline-multiselect-1.0.4.zip">Download</a>
         </nav>
       </header>
 
@@ -44,13 +44,12 @@
           <article>
             <p class="eyebrow">Pinned</p>
             <h2>Current release</h2>
-            <pre><code>npm install @stackline/multiselect@1.0.3 --save-exact</code></pre>
+            <pre><code>npm install @stackline/multiselect@1.0.4 --save-exact</code></pre>
           </article>
           <article>
-            <p class="eyebrow">Browser</p>
-            <h2>Direct files</h2>
-            <pre><code>&lt;link rel="stylesheet" href="./stackline-multiselect.css"&gt;
-&lt;script src="./stackline-multiselect.js"&gt;&lt;/script&gt;</code></pre>
+            <p class="eyebrow">Option 2</p>
+            <h2>Direct download</h2>
+            <pre><code>stackline-multiselect-1.0.4.zip</code></pre>
           </article>
         </div>
       </section>
@@ -77,12 +76,39 @@
       <section class="docs-band">
         <div class="docs-copy">
           <p class="eyebrow">Usage</p>
-          <h2>Plain HTML setup</h2>
-          <pre><code>&lt;link rel="stylesheet" href="./stackline-multiselect.css"&gt;
+          <h2>Option 1: use with npm</h2>
+          <pre><code>&lt;link rel="stylesheet" href="./node_modules/@stackline/multiselect/src/stackline-multiselect.css"&gt;
 &lt;div id="countries"&gt;&lt;/div&gt;
-&lt;script src="./stackline-multiselect.js"&gt;&lt;/script&gt;
+&lt;script src="./node_modules/@stackline/multiselect/src/stackline-multiselect.js"&gt;&lt;/script&gt;
 &lt;script&gt;
   var dropdown = new StacklineMultiSelect("#countries", {
+    data: [
+      { id: 1, itemName: "Brazil" },
+      { id: 2, itemName: "Canada" },
+      { id: 3, itemName: "Portugal" }
+    ],
+    selected: [{ id: 2, itemName: "Canada" }],
+    settings: {
+      text: "Select countries",
+      enableSearchFilter: true,
+      theme: "material",
+      skin: "material",
+      showClearAll: true
+    }
+  });
+&lt;/script&gt;</code></pre>
+        </div>
+      </section>
+
+      <section class="docs-band">
+        <div class="docs-copy">
+          <p class="eyebrow">Alternative</p>
+          <h2>Option 2: use direct files</h2>
+          <pre><code>&lt;link rel="stylesheet" href="./stackline-multiselect.css"&gt;
+&lt;div id="countries-direct"&gt;&lt;/div&gt;
+&lt;script src="./stackline-multiselect.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+  var dropdown = new StacklineMultiSelect("#countries-direct", {
     data: [
       { id: 1, itemName: "Brazil" },
       { id: 2, itemName: "Canada" },
