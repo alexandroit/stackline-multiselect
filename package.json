@@ -1,7 +1,7 @@
 {
   "name": "@stackline/multiselect",
-  "version": "1.0.4",
-  "description": "Framework-agnostic vanilla JavaScript multiselect dropdown with Stackline skins, search, grouping, templates, and direct browser usage.",
+  "version": "1.0.5",
+  "description": "Framework-agnostic vanilla JavaScript multiselect dropdown with ADA-compliant keyboard/ARIA support, Stackline skins, search, grouping, templates, body overlays, and direct browser usage.",
   "main": "src/stackline-multiselect.js",
   "style": "src/stackline-multiselect.css",
   "unpkg": "dist/stackline-multiselect.js",
@@ -14,6 +14,8 @@
     "select",
     "search",
     "skins",
+    "accessibility",
+    "aria",
     "ui"
   ],
   "repository": {
@@ -25,6 +27,9 @@
   },
   "homepage": "https://alexandro.net/docs/multiselect/",
   "license": "MIT",
+  "scripts": {
+    "test": "node tests/static-smoke.test.cjs"
+  },
   "files": [
     "dist",
     "src/stackline-multiselect.js",

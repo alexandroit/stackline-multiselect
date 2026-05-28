@@ -1,6 +1,6 @@
 :root {
   color-scheme: light;
-  --page-bg: #eef2f6;
+  --page-bg: #ffffff;
   --ink: #172033;
   --muted: #607086;
   --panel: #ffffff;
@@ -21,7 +21,7 @@ a {
 }
 
 .page {
-  width: min(1480px, calc(100% - 32px));
+  width: min(1256px, calc(100% - 32px));
   margin: 0 auto;
   padding: 24px 0 48px;
 }
@@ -204,7 +204,7 @@ code {
 
 .case-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: 1fr;
   gap: 14px;
 }
 
@@ -212,7 +212,7 @@ code {
   min-width: 0;
   padding: 16px;
   border: 1px solid var(--line);
-  border-radius: 8px;
+  border-radius: 0;
   background: var(--panel);
 }
 
@@ -229,6 +229,42 @@ code {
   grid-column: 1 / -1;
 }
 
+.case-layout {
+  display: grid;
+  grid-template-columns: minmax(360px, 1fr) repeat(3, minmax(180px, 0.62fr));
+  gap: 10px;
+  align-items: start;
+}
+
+.live-cell {
+  min-width: 0;
+}
+
+.code-panel {
+  min-width: 0;
+}
+
+.code-panel h4 {
+  margin: 0 0 6px;
+  color: #2f3a4f;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.code-panel pre {
+  height: 210px;
+  margin: 0;
+  padding: 12px;
+  overflow: auto;
+  border-radius: 0;
+  background: #102235;
+  color: #e8f2ff;
+  font: 12px/1.45 ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  white-space: pre-wrap;
+}
+
 .theme-buttons {
   display: flex;
   flex-wrap: wrap;
@@ -240,7 +276,7 @@ code {
   min-height: 36px;
   padding: 0 14px;
   border: 1px solid var(--line);
-  border-radius: 6px;
+  border-radius: 0;
   background: #ffffff;
   color: #253249;
   cursor: pointer;
@@ -250,8 +286,8 @@ code {
 
 .theme-buttons button.active {
   border-color: var(--accent);
-  background: var(--accent-soft);
-  color: #0b5d56;
+  background: var(--accent);
+  color: #ffffff;
 }
 
 .settings-preview {
@@ -338,6 +374,33 @@ code {
   --stackline-ms-section-bg: #faf5ff;
 }
 
+.overlay-section .case-card-wide,
+.overflow-card {
+  max-width: none;
+}
+
+.overflow-lab {
+  position: relative;
+  min-height: 145px;
+  padding: 54px 18px 18px;
+  border: 1px solid #93c5fd;
+  background:
+    repeating-linear-gradient(-45deg, rgba(14, 165, 233, 0.08) 0 10px, rgba(255, 255, 255, 0.72) 10px 20px),
+    #ffffff;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.overflow-lab::before {
+  content: "Simulated overflow:hidden dialog surface";
+  position: absolute;
+  top: 16px;
+  left: 18px;
+  color: #475569;
+  font-size: 12px;
+  font-weight: 700;
+}
+
 .skin-section[data-theme="dark"] .case-card {
   border-color: #273142;
   background: #111722;
@@ -358,14 +421,14 @@ code {
 }
 
 @media (max-width: 1024px) {
-  .case-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  .case-layout {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   }
 }
 
 @media (max-width: 720px) {
   .page {
-    width: min(100% - 20px, 1480px);
+    width: min(100% - 20px, 1256px);
     padding-top: 14px;
   }
 
@@ -383,7 +446,12 @@ code {
     grid-template-columns: 1fr;
   }
 
-  .case-grid {
+  .case-grid,
+  .case-layout {
     grid-template-columns: 1fr;
+  }
+
+  .code-panel pre {
+    height: 180px;
   }
 }

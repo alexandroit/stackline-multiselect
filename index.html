@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Stackline Multiselect</title>
+    <link rel="icon" href="data:,">
     <link rel="stylesheet" href="src/stackline-multiselect.css">
     <link rel="stylesheet" href="src/demo.css">
   </head>
@@ -11,22 +12,64 @@
     <main class="page">
       <header class="topbar">
         <p class="eyebrow">Vanilla JavaScript</p>
-        <h1>@stackline/multiselect 1.0.4</h1>
+        <h1>@stackline/multiselect 1.0.5</h1>
       </header>
 
       <section class="skin-section skin-switcher-section custom-skin-sample">
         <div class="section-heading">
-          <p class="eyebrow">Settings-only theme switch</p>
-          <h2>Skin switcher</h2>
+          <div>
+            <p class="eyebrow">Settings-only skin switch</p>
+            <h2>Skin switcher</h2>
+          </div>
         </div>
 
         <div id="theme-buttons" class="theme-buttons"></div>
 
         <div class="case-grid">
           <article class="case-card case-card-wide">
-            <h3>Updates only settings.theme / settings.skin</h3>
-            <div id="skin-switcher"></div>
-            <p id="settings-preview" class="settings-preview"></p>
+            <div class="case-layout">
+              <div class="live-cell">
+                <h3>Updates only settings.skin</h3>
+                <div id="skin-switcher"></div>
+                <p id="settings-preview" class="settings-preview"></p>
+              </div>
+              <div class="code-panel">
+                <h4>HTML</h4>
+                <pre><code>&lt;div id="skin-switcher"&gt;&lt;/div&gt;
+
+&lt;script&gt;
+  new StacklineMultiSelect("#skin-switcher", options);
+&lt;/script&gt;</code></pre>
+              </div>
+              <div class="code-panel">
+                <h4>JS</h4>
+                <pre><code>var selected = [
+  { id: 2, itemName: "Canada" },
+  { id: 3, itemName: "Portugal" },
+  { id: 4, itemName: "United States" }
+];
+
+var settings = makeSettings("classic", "Skin Classic", {
+  badgeShowLimit: 3,
+  maxHeight: 220
+});</code></pre>
+              </div>
+              <div class="code-panel">
+                <h4>JSON</h4>
+                <pre><code>{
+  "data": "countries",
+  "selected": [
+    { "id": 2, "itemName": "Canada" },
+    { "id": 3, "itemName": "Portugal" },
+    { "id": 4, "itemName": "United States" }
+  ],
+  "settings": {
+    "skin": "classic",
+    "badgeShowLimit": 3
+  }
+}</code></pre>
+              </div>
+            </div>
           </article>
         </div>
       </section>

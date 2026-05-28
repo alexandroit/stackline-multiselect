@@ -1,6 +1,6 @@
 # @stackline/multiselect
 
-> A maintained vanilla JavaScript multiselect dropdown for framework-agnostic UI workflows, with search, grouping, selection limits, item and badge templates, direct browser usage, and switchable Stackline skins.
+> A maintained vanilla JavaScript multiselect dropdown for framework-agnostic UI workflows, with search, grouping, selection limits, item and badge templates, direct browser usage, body-overlay positioning, switchable Stackline skins, and ADA-compliant keyboard/ARIA behavior.
 
 [![npm version](https://img.shields.io/npm/v/@stackline/multiselect.svg?style=flat-square)](https://www.npmjs.com/package/@stackline/multiselect)
 [![npm downloads](https://img.shields.io/npm/dt/@stackline/multiselect.svg?style=flat-square)](https://www.npmjs.com/package/@stackline/multiselect)
@@ -9,9 +9,9 @@
 [![Vanilla JS](https://img.shields.io/badge/Vanilla-JavaScript-f7df1e?style=flat-square&logo=javascript&logoColor=111)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 [![GitHub stars](https://img.shields.io/github/stars/alexandroit/stackline-multiselect.svg?style=flat-square)](https://github.com/alexandroit/stackline-multiselect/stargazers)
 
-**[Documentation & Live Demos](https://alexandro.net/docs/multiselect/)** | **[Direct Download](https://github.com/alexandroit/stackline-multiselect/releases/download/v1.0.4/stackline-multiselect-1.0.4.zip)** | **[npm](https://www.npmjs.com/package/@stackline/multiselect)** | **[Issues](https://github.com/alexandroit/stackline-multiselect/issues)** | **[Repository](https://github.com/alexandroit/stackline-multiselect)**
+**[Documentation & Live Demos](https://alexandro.net/docs/multiselect/)** | **[Direct Download](https://github.com/alexandroit/stackline-multiselect/releases/download/v1.0.5/stackline-multiselect-1.0.5.zip)** | **[npm](https://www.npmjs.com/package/@stackline/multiselect)** | **[Issues](https://github.com/alexandroit/stackline-multiselect/issues)** | **[Repository](https://github.com/alexandroit/stackline-multiselect)**
 
-**Latest npm release:** `1.0.4` for vanilla JavaScript projects
+**Latest npm release:** `1.0.5` for vanilla JavaScript projects
 
 ---
 
@@ -45,8 +45,10 @@ The package ships a single JavaScript file, a single CSS file, built-in skins, a
 | Custom item templates | Yes |
 | Custom badge templates | Yes |
 | Runtime skin switching | Yes |
-| Built-in `classic`, `material`, `dark`, and `custom` skins | Yes |
+| Built-in `classic`, `material`, `dark`, `custom`, and `brand` skins | Yes |
 | Named custom skins through CSS variables | Yes |
+| ADA-compliant keyboard and ARIA behavior | Yes |
+| Dialog/overflow clipping escape with `appendToBody` / `tagToBody` | Yes |
 | Direct browser download | Yes |
 
 ## Table of Contents
@@ -84,7 +86,7 @@ npm install @stackline/multiselect
 Install the current tested vanilla release exactly:
 
 ```bash
-npm install @stackline/multiselect@1.0.4 --save-exact
+npm install @stackline/multiselect@1.0.5 --save-exact
 ```
 
 ## Option 1: npm Usage
@@ -152,7 +154,7 @@ If your framework or bundler copies assets into a public folder, keep the same f
 Use the direct download when your project does not use npm:
 
 ```text
-https://github.com/alexandroit/stackline-multiselect/releases/download/v1.0.4/stackline-multiselect-1.0.4.zip
+https://github.com/alexandroit/stackline-multiselect/releases/download/v1.0.5/stackline-multiselect-1.0.5.zip
 ```
 
 Extract the archive and copy these files into your public assets:
@@ -260,7 +262,15 @@ settings: {
   disabled: false,
   groupBy: "",
   limitSelection: 0,
-  lazyLoading: false
+  lazyLoading: false,
+  lazyPageSize: 40,
+  appendToBody: false,
+  tagToBody: false,
+  autoPosition: true,
+  position: "bottom",
+  closeDropDownOnSelection: false,
+  ariaLabel: "Multiselect dropdown",
+  listboxAriaLabel: "Dropdown options"
 }
 ```
 
@@ -286,6 +296,13 @@ settings: {
 | `groupBy` | string | `""` | Groups items by the provided object field. |
 | `limitSelection` | number | `0` | Maximum selected items. `0` means no limit. |
 | `lazyLoading` | boolean | `false` | Locally renders the first chunk of a large filtered list. |
+| `lazyPageSize` | number | `40` | Number of rows added per lazy chunk. |
+| `appendToBody` / `tagToBody` | boolean | `false` | Moves the open panel to `document.body` to avoid overflow/dialog clipping. |
+| `autoPosition` | boolean | `true` | Chooses top or bottom when space is constrained. |
+| `position` | string | `"bottom"` | Preferred open direction when `autoPosition` does not override it. |
+| `closeDropDownOnSelection` | boolean | `false` | Closes after selecting an item. |
+| `ariaLabel` | string | `"Multiselect dropdown"` | Accessible name for the combobox trigger. |
+| `listboxAriaLabel` | string | `"Dropdown options"` | Accessible name for the option list. |
 
 ## Skins and Themes
 
@@ -392,6 +409,7 @@ var dropdown = new StacklineMultiSelect("#countries", {
 | `onChange` | Current selected items |
 | `onOpen` | Current selected items |
 | `onClose` | Current selected items |
+| `onScrollToEnd` | Lazy loading progress object |
 
 ## API
 
@@ -401,6 +419,11 @@ dropdown.setSelected(items);
 dropdown.setSettings({ badgeShowLimit: 2 });
 dropdown.setTheme("dark");
 dropdown.getSelected();
+dropdown.openDropdown();
+dropdown.closeDropdown();
+dropdown.focusSearch();
+dropdown.selectAll();
+dropdown.clearSelection();
 dropdown.destroy();
 ```
 
@@ -411,6 +434,11 @@ dropdown.destroy();
 | `setSettings(settings)` | Merges new settings and re-renders. |
 | `setTheme(name)` | Updates `settings.theme` and `settings.skin`. |
 | `getSelected()` | Returns a copy of the selected items. |
+| `openDropdown()` | Opens the menu. |
+| `closeDropdown()` | Closes the menu. |
+| `focusSearch()` | Opens the menu and focuses the search input. |
+| `selectAll()` | Toggles select all for the current filtered list. |
+| `clearSelection()` | Clears every selected item. |
 | `destroy()` | Removes the component from its host. |
 
 ## Run Locally

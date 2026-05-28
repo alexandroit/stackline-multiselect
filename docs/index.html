@@ -5,9 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta
       name="description"
-      content="@stackline/multiselect is a framework-agnostic vanilla JavaScript multiselect dropdown with skins, search, grouping, templates, and direct browser usage."
+      content="@stackline/multiselect is a framework-agnostic vanilla JavaScript multiselect dropdown with skins, search, grouping, templates, body overlays, and ADA-compliant keyboard support."
     >
     <title>@stackline/multiselect Documentation</title>
+    <link rel="icon" href="data:,">
     <link rel="stylesheet" href="./stackline-multiselect.css">
     <link rel="stylesheet" href="./site.css">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6353624842390947" crossorigin="anonymous"></script>
@@ -25,12 +26,12 @@
         <div>
           <p class="eyebrow">Vanilla JavaScript</p>
           <h1>@stackline/multiselect</h1>
-          <p class="lead">Framework-agnostic multiselect dropdown with search, grouping, templates, and switchable skins.</p>
+          <p class="lead">Framework-agnostic multiselect dropdown with search, grouping, templates, switchable skins, body overlays, and ADA-compliant keyboard/ARIA behavior.</p>
         </div>
         <nav class="docs-links" aria-label="Package links">
           <a href="https://www.npmjs.com/package/@stackline/multiselect">npm</a>
           <a href="https://github.com/alexandroit/stackline-multiselect">GitHub</a>
-          <a href="https://github.com/alexandroit/stackline-multiselect/releases/download/v1.0.4/stackline-multiselect-1.0.4.zip">Download</a>
+          <a href="https://github.com/alexandroit/stackline-multiselect/releases/download/v1.0.5/stackline-multiselect-1.0.5.zip">Download</a>
         </nav>
       </header>
 
@@ -44,12 +45,12 @@
           <article>
             <p class="eyebrow">Pinned</p>
             <h2>Current release</h2>
-            <pre><code>npm install @stackline/multiselect@1.0.4 --save-exact</code></pre>
+            <pre><code>npm install @stackline/multiselect@1.0.5 --save-exact</code></pre>
           </article>
           <article>
             <p class="eyebrow">Option 2</p>
             <h2>Direct download</h2>
-            <pre><code>stackline-multiselect-1.0.4.zip</code></pre>
+            <pre><code>stackline-multiselect-1.0.5.zip</code></pre>
           </article>
         </div>
       </section>
@@ -66,9 +67,49 @@
 
         <div class="case-grid">
           <article class="case-card case-card-wide">
-            <h3>Updates only settings.theme and settings.skin</h3>
-            <div id="skin-switcher"></div>
-            <p id="settings-preview" class="settings-preview"></p>
+            <div class="case-layout">
+              <div class="live-cell">
+                <h3>Updates only settings.skin</h3>
+                <div id="skin-switcher"></div>
+                <p id="settings-preview" class="settings-preview"></p>
+              </div>
+              <div class="code-panel">
+                <h4>HTML</h4>
+                <pre><code>&lt;div id="skin-switcher"&gt;&lt;/div&gt;
+
+&lt;script&gt;
+  new StacklineMultiSelect("#skin-switcher", options);
+&lt;/script&gt;</code></pre>
+              </div>
+              <div class="code-panel">
+                <h4>JS</h4>
+                <pre><code>var selected = [
+  { id: 2, itemName: "Canada" },
+  { id: 3, itemName: "Portugal" },
+  { id: 4, itemName: "United States" }
+];
+
+var settings = makeSettings("classic", "Skin Classic", {
+  badgeShowLimit: 3,
+  maxHeight: 220
+});</code></pre>
+              </div>
+              <div class="code-panel">
+                <h4>JSON</h4>
+                <pre><code>{
+  "data": "countries",
+  "selected": [
+    { "id": 2, "itemName": "Canada" },
+    { "id": 3, "itemName": "Portugal" },
+    { "id": 4, "itemName": "United States" }
+  ],
+  "settings": {
+    "skin": "classic",
+    "badgeShowLimit": 3
+  }
+}</code></pre>
+              </div>
+            </div>
           </article>
         </div>
       </section>
@@ -146,6 +187,8 @@
               <tr><td><code>enableSearchFilter</code></td><td><code>true</code></td><td>Show the search field.</td></tr>
               <tr><td><code>enableCheckAll</code></td><td><code>true</code></td><td>Show select all and clear all.</td></tr>
               <tr><td><code>showClearAll</code></td><td><code>true</code></td><td>Show the global remove button.</td></tr>
+              <tr><td><code>appendToBody</code> / <code>tagToBody</code></td><td><code>false</code></td><td>Move the open panel to <code>document.body</code> to escape dialog and overflow clipping.</td></tr>
+              <tr><td><code>ariaLabel</code></td><td><code>"Multiselect dropdown"</code></td><td>Name the combobox for assistive technology.</td></tr>
               <tr><td><code>badgeShowLimit</code></td><td><code>4</code></td><td>Show a counter after visible chips.</td></tr>
               <tr><td><code>groupBy</code></td><td><code>""</code></td><td>Group options by a field name.</td></tr>
               <tr><td><code>limitSelection</code></td><td><code>0</code></td><td>Limit selected items.</td></tr>

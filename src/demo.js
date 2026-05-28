@@ -24,10 +24,12 @@
   var groupedCountries = [
     { id: 21, itemName: "Brazil", region: "America" },
     { id: 22, itemName: "Canada", region: "America" },
-    { id: 23, itemName: "Portugal", region: "Europe" },
-    { id: 24, itemName: "Germany", region: "Europe" },
-    { id: 25, itemName: "Japan", region: "Asia" },
-    { id: 26, itemName: "South Korea", region: "Asia" }
+    { id: 23, itemName: "United States", region: "America" },
+    { id: 24, itemName: "Argentina", region: "America" },
+    { id: 25, itemName: "Portugal", region: "Europe" },
+    { id: 26, itemName: "Germany", region: "Europe" },
+    { id: 27, itemName: "Japan", region: "Asia" },
+    { id: 28, itemName: "South Korea", region: "Asia" }
   ];
 
   var templateItems = [
@@ -71,8 +73,10 @@
       maxHeight: 260,
       showCheckbox: true,
       noDataLabel: "No data",
+      skin: theme,
       theme: theme,
-      skin: theme
+      ariaLabel: text,
+      listboxAriaLabel: text + " options"
     };
 
     options = options || {};
@@ -108,6 +112,50 @@
     renderEvents();
   }
 
+  function titleCase(value) {
+    return value.charAt(0).toUpperCase() + value.slice(1);
+  }
+
+  function compactItems(items) {
+    return items.map(function (item) {
+      return {
+        id: item.id,
+        itemName: item.itemName
+      };
+    });
+  }
+
+  function codePanel(label, text) {
+    var panel = document.createElement("div");
+    panel.className = "code-panel";
+
+    var heading = document.createElement("h4");
+    heading.textContent = label;
+
+    var pre = document.createElement("pre");
+    var code = document.createElement("code");
+    code.textContent = text;
+    pre.appendChild(code);
+
+    panel.appendChild(heading);
+    panel.appendChild(pre);
+    return panel;
+  }
+
+  function codeFor(testCase, targetName) {
+    var selected = compactItems(testCase.selected || []);
+    var settings = testCase.settings || {};
+    return {
+      html: '<div id="' + targetName + '"></div>\n\n<script>\n  new StacklineMultiSelect("#' + targetName + '", options);\n</script>',
+      js: 'var selected = ' + JSON.stringify(selected, null, 2) + ';\n\nvar settings = ' + JSON.stringify(settings, null, 2) + ';',
+      json: JSON.stringify({
+        data: (testCase.data || []).length + " items",
+        selected: selected,
+        settings: settings
+      }, null, 2)
+    };
+  }
+
   function renderEvents() {
     var target = document.getElementById("events");
     target.innerHTML = "";
@@ -136,20 +184,41 @@
       },
       onDeSelectAll: function (items) {
         record(name + " deselectAll", items);
+      },
+      onScrollToEnd: function (payload) {
+        record(name + " scrollToEnd", payload);
       }
     });
     instances.push(instance);
     return instance;
   }
 
-  function card(section, title, className) {
+  function card(section, title, className, code) {
     var article = document.createElement("article");
     article.className = "case-card" + (className ? " " + className : "");
     var h3 = document.createElement("h3");
     h3.textContent = title;
     var mount = document.createElement("div");
-    article.appendChild(h3);
-    article.appendChild(mount);
+
+    if (code) {
+      var layout = document.createElement("div");
+      layout.className = "case-layout";
+
+      var live = document.createElement("div");
+      live.className = "live-cell";
+      live.appendChild(h3);
+      live.appendChild(mount);
+
+      layout.appendChild(live);
+      layout.appendChild(codePanel("HTML", code.html));
+      layout.appendChild(codePanel("JS", code.js));
+      layout.appendChild(codePanel("JSON", code.json));
+      article.appendChild(layout);
+    } else {
+      article.appendChild(h3);
+      article.appendChild(mount);
+    }
+
     section.appendChild(article);
     return mount;
   }
@@ -245,6 +314,7 @@
         selected: byIds(largeList, [106]),
         settings: makeSettings(theme, titleFor(theme, "lazy"), {
           lazyLoading: true,
+          lazyPageSize: 20,
           maxHeight: 120,
           badgeShowLimit: 3
         })
@@ -276,16 +346,16 @@
     availableThemes.forEach(function (theme) {
       var btn = document.createElement("button");
       btn.type = "button";
-      btn.textContent = theme;
+      btn.textContent = titleCase(theme);
       btn.className = theme === "classic" ? "active" : "";
       btn.addEventListener("click", function () {
         Array.prototype.forEach.call(target.querySelectorAll("button"), function (button) {
           button.classList.toggle("active", button === btn);
         });
         switcher.setTheme(theme);
-        switcher.setSettings({ text: "Skin " + theme });
-        preview.textContent = "theme: " + theme + " | skin: " + theme;
-        record("skin switch theme", theme);
+        switcher.setSettings({ text: "Skin " + titleCase(theme), skin: theme, theme: theme });
+        preview.textContent = "skin: " + theme;
+        record("skin switch skin", theme);
       });
       target.appendChild(btn);
     });
@@ -297,16 +367,55 @@
       document.getElementById("skin-switcher"),
       countries,
       byIds(countries, [2, 3, 4]),
-      makeSettings("classic", "Skin classic", { badgeShowLimit: 2, maxHeight: 220 }),
+      makeSettings("classic", "Skin Classic", { badgeShowLimit: 3, maxHeight: 220 }),
       "skin switch"
     );
-    preview.textContent = "theme: classic | skin: classic";
+    preview.textContent = "skin: classic";
     renderThemeButtons(switcher, preview);
+  }
+
+  function renderOverlaySection() {
+    var target = document.getElementById("sections");
+    var section = document.createElement("section");
+    section.className = "skin-section overlay-section";
+    section.innerHTML = '<div class="section-heading"><div><p class="eyebrow">Dialog support</p><h2>Overflow container / body overlay</h2></div></div>';
+
+    var grid = document.createElement("div");
+    grid.className = "case-grid";
+    section.appendChild(grid);
+
+    var overlayCase = {
+      data: groupedCountries,
+      selected: byIds(groupedCountries, [21, 22]),
+      settings: makeSettings("material", "Dialog dropdown", {
+        appendToBody: true,
+        tagToBody: true,
+        autoPosition: true,
+        position: "bottom",
+        maxHeight: 160,
+        badgeShowLimit: 2,
+        groupBy: "region"
+      })
+    };
+    var mount = card(grid, "Clipping-safe dropdown with appendToBody", "case-card-wide overflow-card", codeFor(overlayCase, "overlay-example"));
+    var frame = document.createElement("div");
+    frame.className = "overflow-lab";
+    mount.appendChild(frame);
+
+    createMultiselect(
+      frame,
+      overlayCase.data,
+      overlayCase.selected,
+      overlayCase.settings,
+      "body overlay"
+    );
+
+    target.appendChild(section);
   }
 
   function renderSections() {
     var target = document.getElementById("sections");
-    var themes = ["classic", "material", "dark", "custom"];
+    var themes = ["classic", "material", "dark", "custom", "brand"];
 
     themes.forEach(function (theme) {
       var section = document.createElement("section");
@@ -322,8 +431,8 @@
       grid.className = "case-grid";
       section.appendChild(grid);
 
-      makeCases(theme).forEach(function (testCase) {
-        var mount = card(grid, testCase.title);
+      makeCases(theme).forEach(function (testCase, index) {
+        var mount = card(grid, testCase.title, "case-card-wide", codeFor(testCase, theme + "-case-" + (index + 1)));
         createMultiselect(
           mount,
           testCase.data,
@@ -339,6 +448,7 @@
   }
 
   renderSwitcher();
+  renderOverlaySection();
   renderSections();
   renderEvents();
 })();
