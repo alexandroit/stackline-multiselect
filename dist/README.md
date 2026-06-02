@@ -1,17 +1,20 @@
 # @stackline/multiselect
 
-> A maintained vanilla JavaScript multiselect dropdown for framework-agnostic UI workflows, with search, grouping, selection limits, item and badge templates, direct browser usage, body-overlay positioning, switchable Stackline skins, and ADA-compliant keyboard/ARIA behavior.
+> A maintained vanilla JavaScript multiselect dropdown for framework-agnostic applications, with object data, skins, render callbacks, headless/state APIs, body-overlay positioning, and accessibility-focused and keyboard/ARIA tested behavior.
 
 [![npm version](https://img.shields.io/npm/v/@stackline/multiselect.svg?style=flat-square)](https://www.npmjs.com/package/@stackline/multiselect)
-[![npm downloads](https://img.shields.io/npm/dt/@stackline/multiselect.svg?style=flat-square)](https://www.npmjs.com/package/@stackline/multiselect)
 [![npm monthly](https://img.shields.io/npm/dm/@stackline/multiselect.svg?style=flat-square)](https://www.npmjs.com/package/@stackline/multiselect)
 [![license](https://img.shields.io/npm/l/@stackline/multiselect.svg?style=flat-square)](https://github.com/alexandroit/stackline-multiselect/blob/main/LICENSE)
 [![Vanilla JS](https://img.shields.io/badge/Vanilla-JavaScript-f7df1e?style=flat-square&logo=javascript&logoColor=111)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
-[![GitHub stars](https://img.shields.io/github/stars/alexandroit/stackline-multiselect.svg?style=flat-square)](https://github.com/alexandroit/stackline-multiselect/stargazers)
+[![Community](https://img.shields.io/badge/Reddit-Stackline-ff4500?style=flat-square&logo=reddit&logoColor=white)](https://www.reddit.com/r/Stackline/)
 
-**[Documentation & Live Demos](https://alexandro.net/docs/multiselect/)** | **[Direct Download](https://github.com/alexandroit/stackline-multiselect/releases/download/v1.0.5/stackline-multiselect-1.0.5.zip)** | **[npm](https://www.npmjs.com/package/@stackline/multiselect)** | **[Issues](https://github.com/alexandroit/stackline-multiselect/issues)** | **[Repository](https://github.com/alexandroit/stackline-multiselect)**
+**[Documentation & Live Demos](https://alexandro.net/docs/multiselect/)** | **[Direct Download](https://github.com/alexandroit/stackline-multiselect/releases/download/v1.1.0/stackline-multiselect-1.1.0.zip)** | **[StackBlitz](https://stackblitz.com/github/alexandroit/stackline-multiselect?file=docs%2Fmain.js&startScript=start&initialpath=%2Fbasic)** | **[npm](https://www.npmjs.com/package/@stackline/multiselect)** | **[Issues](https://github.com/alexandroit/stackline-multiselect/issues)** | **[Repository](https://github.com/alexandroit/stackline-multiselect)**
 
-**Latest npm release:** `1.0.5` for vanilla JavaScript projects
+<p align="center">
+  <img src="https://alexandro.net/images/public/2026/06/dropdownlist.gif" alt="@stackline/multiselect live dropdown preview" width="420">
+</p>
+
+**Latest vanilla release:** `1.1.0`
 
 ---
 
@@ -21,132 +24,71 @@
 
 ## Why this library?
 
-`@stackline/multiselect` is for projects that need a reliable multiselect without a framework dependency. It works with plain HTML, server-rendered pages, static sites, CMS templates, and framework apps that prefer to mount a small browser widget directly.
+`@stackline/multiselect` is for projects that need a reliable multiselect without a framework dependency. It works with plain HTML, server-rendered pages, static sites, CMS templates, Web Components, and framework apps that prefer to mount a small browser widget directly.
 
-The package ships a single JavaScript file, a single CSS file, built-in skins, and a direct download bundle for projects that do not use npm.
+The package ships a styled component API and a lower-level state API. Start with `new StacklineMultiSelect(...)` for forms, filters, dashboards, and admin screens. Use `createStacklineMultiSelectState(...)` when your application needs to own every element and CSS class while keeping Stackline selection, filtering, grouping, keyboard handling, ARIA props, and callbacks.
+
+The `1.1.x` line ports the React `19.1.0` combobox-contract work to vanilla JavaScript: selected object preservation, `aria-selected` plus `aria-checked`, configurable keyboard behavior, focus fixes after mouse selection, headless/state prop getters, render callbacks, body overlays for clipped dialogs, and the same 64-country live test matrix.
 
 ## Features
 
 | Feature | Supported |
 | :--- | :---: |
 | Framework-agnostic vanilla JavaScript | Yes |
-| Multiple and single selection modes | Yes |
+| Multi-select and single-select modes | Yes |
+| Object data with configurable `primaryKey` / `labelKey` | Yes |
+| Styled component API | Yes |
+| Headless `createStacklineMultiSelectState` API | Yes |
 | Search and filter | Yes |
-| Select all and clear all actions | Yes |
-| Global clear selected button | Yes |
-| Per-item remove buttons | Yes |
-| Checkbox and no-checkbox modes | Yes |
-| Selection limit | Yes |
-| Badge overflow counter | Yes |
-| Group by field | Yes |
-| Disabled and empty states | Yes |
-| Long list scroll | Yes |
-| Local lazy rendering | Yes |
-| Custom item templates | Yes |
-| Custom badge templates | Yes |
-| Runtime skin switching | Yes |
+| Group by field or function | Yes |
+| Select all, clear all, and per-item remove actions | Yes |
+| Custom option, badge, empty-state, and footer render callbacks | Yes |
+| Lazy rendering and scroll-to-end callbacks | Yes |
 | Built-in `classic`, `material`, `dark`, `custom`, and `brand` skins | Yes |
-| Named custom skins through CSS variables | Yes |
-| ADA-compliant keyboard and ARIA behavior | Yes |
-| Dialog/overflow clipping escape with `appendToBody` / `tagToBody` | Yes |
+| Custom skins through CSS variables | Yes |
+| Accessibility-focused and keyboard/ARIA tested navigation | Yes |
+| Multiselect options expose both `aria-selected` and `aria-checked` | Yes |
+| Backspace/Escape/Space/Tab combobox contract controls | Yes |
+| Selected object preservation across async data refreshes | Yes |
+| Dialog and overflow-container support through `appendToBody` / `tagToBody` | Yes |
 | Direct browser download | Yes |
 
 ## Table of Contents
 
-1. [Vanilla Version Note](#vanilla-version-note)
-2. [Installation](#installation)
-3. [Option 1: npm Usage](#option-1-npm-usage)
-4. [Option 2: Direct Download](#option-2-direct-download)
-5. [Official Vanilla Test Matrix](#official-vanilla-test-matrix)
-6. [Settings](#settings)
-7. [Skins and Themes](#skins-and-themes)
-8. [Custom Skins](#custom-skins)
-9. [Custom Templates](#custom-templates)
-10. [Events](#events)
-11. [API](#api)
-12. [Run Locally](#run-locally)
-13. [License](#license)
-
-## Vanilla Version Note
-
-- package: `@stackline/multiselect`
-- runtime: plain browser JavaScript
-- global constructor: `StacklineMultiSelect`
-- dependencies: none
-- current published line: `1.0.x`
-
-This vanilla package is separate from the Angular package. Use `@stackline/multiselect` when you need direct browser usage without Angular, React, Vue, or a bundler.
+1. [Installation](#installation)
+2. [Option 1: npm Usage](#option-1-npm-usage)
+3. [Option 2: Direct Download](#option-2-direct-download)
+4. [Basic Usage](#basic-usage)
+5. [Customization Paths](#customization-paths)
+6. [Headless State Usage](#headless-state-usage)
+7. [Combobox Contract](#combobox-contract)
+8. [Settings](#settings)
+9. [Skins](#skins)
+10. [Render Callbacks](#render-callbacks)
+11. [Events](#events)
+12. [Methods](#methods)
+13. [Official Vanilla Test Matrix](#official-vanilla-test-matrix)
+14. [Run Locally](#run-locally)
+15. [License](#license)
 
 ## Installation
 
 ```bash
-npm install @stackline/multiselect
+npm install @stackline/multiselect@1.1.0 --save-exact
 ```
 
-Install the current tested vanilla release exactly:
-
-```bash
-npm install @stackline/multiselect@1.0.5 --save-exact
-```
+Use this package when your project needs direct browser usage without Angular, React, Vue, or a bundler.
 
 ## Option 1: npm Usage
 
 Use this option first when the project installs packages with npm.
 
-### 1. Load the CSS from `node_modules`
-
-```html
-<link rel="stylesheet" href="./node_modules/@stackline/multiselect/src/stackline-multiselect.css">
-```
-
-If your framework or bundler copies assets into a public folder, keep the same file and adjust only the path.
-
-### 2. Add a mount element
-
-```html
-<div id="countries"></div>
-```
-
-### 3. Load the JavaScript from `node_modules`
-
-```html
-<script src="./node_modules/@stackline/multiselect/src/stackline-multiselect.js"></script>
-```
-
-### 4. Create the dropdown
-
 ```html
 <link rel="stylesheet" href="./node_modules/@stackline/multiselect/src/stackline-multiselect.css">
 
 <div id="countries"></div>
 
 <script src="./node_modules/@stackline/multiselect/src/stackline-multiselect.js"></script>
-<script>
-  var dropdown = new StacklineMultiSelect("#countries", {
-    data: [
-      { id: 1, itemName: "Brazil" },
-      { id: 2, itemName: "Canada" },
-      { id: 3, itemName: "Portugal" },
-      { id: 4, itemName: "United States" }
-    ],
-    selected: [{ id: 2, itemName: "Canada" }],
-    settings: {
-      singleSelection: false,
-      text: "Select countries",
-      selectAllText: "Select all",
-      unSelectAllText: "Clear all",
-      enableSearchFilter: true,
-      searchPlaceholderText: "Search",
-      badgeShowLimit: 4,
-      maxHeight: 260,
-      showCheckbox: true,
-      showClearAll: true,
-      noDataLabel: "No data",
-      theme: "classic",
-      skin: "classic"
-    }
-  });
-</script>
 ```
 
 ## Option 2: Direct Download
@@ -154,308 +96,360 @@ If your framework or bundler copies assets into a public folder, keep the same f
 Use the direct download when your project does not use npm:
 
 ```text
-https://github.com/alexandroit/stackline-multiselect/releases/download/v1.0.5/stackline-multiselect-1.0.5.zip
+https://github.com/alexandroit/stackline-multiselect/releases/download/v1.1.0/stackline-multiselect-1.1.0.zip
 ```
 
-Extract the archive and copy these files into your public assets:
-
-```text
-stackline-multiselect.css
-stackline-multiselect.js
-direct-example.html
-```
-
-Then reference the copied files:
+Extract the archive and reference the copied files:
 
 ```html
 <link rel="stylesheet" href="./stackline-multiselect.css">
+<div id="countries"></div>
+<script src="./stackline-multiselect.js"></script>
+```
+
+## Basic Usage
+
+```html
+<link rel="stylesheet" href="./node_modules/@stackline/multiselect/src/stackline-multiselect.css">
 
 <div id="countries"></div>
 
-<script src="./stackline-multiselect.js"></script>
+<script src="./node_modules/@stackline/multiselect/src/stackline-multiselect.js"></script>
 <script>
+  var countries = [
+    { id: 1, itemName: "Brazil", capital: "Brasilia", region: "South America" },
+    { id: 2, itemName: "Canada", capital: "Ottawa", region: "North America" },
+    { id: 3, itemName: "Portugal", capital: "Lisbon", region: "Europe" },
+    { id: 4, itemName: "United States", capital: "Washington, DC", region: "North America" }
+  ];
+
   var dropdown = new StacklineMultiSelect("#countries", {
-    data: [
-      { id: 1, itemName: "Brazil" },
-      { id: 2, itemName: "Canada" },
-      { id: 3, itemName: "Portugal" },
-      { id: 4, itemName: "United States" }
-    ],
-    selected: [{ id: 2, itemName: "Canada" }],
+    data: countries,
+    selected: [countries[1]],
     settings: {
-      singleSelection: false,
       text: "Select countries",
-      selectAllText: "Select all",
-      unSelectAllText: "Clear all",
+      primaryKey: "id",
+      labelKey: "itemName",
+      searchBy: ["itemName", "capital", "region"],
       enableSearchFilter: true,
-      searchPlaceholderText: "Search",
-      badgeShowLimit: 4,
+      badgeShowLimit: 3,
       maxHeight: 260,
       showCheckbox: true,
       showClearAll: true,
-      noDataLabel: "No data",
-      theme: "classic",
       skin: "classic"
+    },
+    onChange: function (items) {
+      console.log("selected", items);
     }
   });
 </script>
 ```
 
-## Official Vanilla Test Matrix
+`idKey` is still accepted for compatibility. New examples use `primaryKey`.
 
-The public documentation uses the same examples from the vanilla test application. Switch between skins through the settings object:
+## Customization Paths
+
+| Layer | Best for | What you own |
+| :--- | :--- | :--- |
+| `new StacklineMultiSelect(...)` | Forms, filters, dashboards, reports, and admin screens. | Data, selected values, settings, events, and optional render callbacks. |
+| Render callbacks | Custom option rows, custom chips, empty states, and menu footer content. | Small pieces of HTML while the component keeps behavior and ARIA. |
+| `createStacklineMultiSelectState(...)` | Fully custom UI, design systems, or existing combobox shells. | All markup and CSS, while Stackline provides state, prop getters, keyboard flow, grouping, and callbacks. |
+
+For most teams, start with the styled component. Use render callbacks when the layout needs richer rows. Use the headless state API when the application must own the complete HTML structure.
+
+## Headless State Usage
+
+`createStacklineMultiSelectState` exposes state, actions, grouped/visible options, selected badges, and prop getters. It does not render DOM for you.
+
+```html
+<div id="headless"></div>
+
+<script>
+  var state = createStacklineMultiSelectState({
+    data: [
+      { id: 1, itemName: "Brazil", region: "South America" },
+      { id: 2, itemName: "Canada", region: "North America" },
+      { id: 3, itemName: "Portugal", region: "Europe" }
+    ],
+    selected: [{ id: 1, itemName: "Brazil", region: "South America" }],
+    settings: {
+      text: "Choose countries",
+      primaryKey: "id",
+      labelKey: "itemName",
+      groupBy: "region",
+      enableSearchFilter: true,
+      skin: "classic"
+    },
+    onUpdate: render,
+    onChange: function (items) {
+      console.log("selected", items);
+    }
+  });
+
+  function applyProps(node, props) {
+    Object.keys(props).forEach(function (key) {
+      if (key.indexOf("on") === 0 && typeof props[key] === "function") {
+        node.addEventListener(key.slice(2).toLowerCase(), props[key]);
+      } else if (props[key] !== false && props[key] != null) {
+        node.setAttribute(key, String(props[key]));
+      }
+    });
+    return node;
+  }
+
+  function render() {
+    var root = document.getElementById("headless");
+    root.innerHTML = "";
+
+    var shell = applyProps(document.createElement("div"), state.getRootProps());
+    var trigger = applyProps(document.createElement("button"), state.getTriggerProps());
+    trigger.textContent = state.label;
+    shell.appendChild(trigger);
+
+    if (state.isOpen) {
+      var listbox = applyProps(document.createElement("div"), state.getListboxProps());
+      state.visibleOptions.forEach(function (option) {
+        var row = applyProps(document.createElement("div"), state.getOptionProps(option));
+        row.textContent = option.label;
+        listbox.appendChild(row);
+      });
+      shell.appendChild(listbox);
+    }
+
+    root.appendChild(shell);
+  }
+
+  render();
+</script>
+```
+
+## Combobox Contract
+
+The default keyboard contract is enabled and can be configured per instance:
 
 ```js
 settings: {
-  text: "Classic basic",
-  theme: "classic",
-  skin: "classic"
+  keyboard: {
+    space: true,
+    spaceOptionAction: "toggle",
+    tab: true,
+    arrows: true,
+    escape: true,
+    backspaceRemovesLastWhenSearchEmpty: false,
+    deleteRemovesFocusedBadge: true
+  }
 }
 ```
 
-```js
-settings: {
-  text: "Material basic",
-  theme: "material",
-  skin: "material"
-}
-```
+Behavior tested in the live routes:
 
-The same scenarios are validated for `classic`, `material`, `dark`, and `custom` skins:
-
-| # | Scenario | Main settings tested |
-| :---: | :--- | :--- |
-| 01 | Basic multi | `{ enableSearchFilter: false }` |
-| 02 | Search + select all | Search, select all, clear all, events |
-| 03 | Single without checkbox | `{ singleSelection: true, showCheckbox: false, enableCheckAll: false }` |
-| 04 | Multi without checkbox | `{ showCheckbox: false, enableCheckAll: false }` |
-| 05 | Selection limit | `{ limitSelection: 2, badgeShowLimit: 2 }` |
-| 06 | Badge overflow | `{ badgeShowLimit: 2, maxHeight: 220 }` |
-| 07 | Grouped by region | `{ groupBy: "region", maxHeight: 220 }` |
-| 08 | Disabled with value | `{ disabled: true }` |
-| 09 | Empty data | `{ noDataLabel: "No records found" }` |
-| 10 | Long list with scroll | `{ maxHeight: 120, badgeShowLimit: 3 }` |
-| 11 | Local lazy loading | `{ lazyLoading: true, maxHeight: 120, badgeShowLimit: 3 }` |
-| 12 | Item + chip template | `badgeTemplate` and `itemTemplate` |
+| Key | Contract |
+| :--- | :--- |
+| `Space` on trigger | Opens or closes the dropdown. |
+| `Space` on option | Toggles the focused option and keeps focus predictable. |
+| `Space` in search | Types a normal space. |
+| `Tab` | Moves to the next focusable control and does not select an option. |
+| `ArrowUp` / `ArrowDown` | Moves through options when the list is open. |
+| `Escape` | Closes the list without clearing selected values. |
+| `Backspace` in empty search | Disabled by default for removal. Enable `backspaceRemovesLastWhenSearchEmpty` only if your product wants that behavior. |
+| `Backspace` / `Delete` on focused badge remove button | Removes that badge when `deleteRemovesFocusedBadge` is enabled. |
 
 ## Settings
 
 ```js
 settings: {
-  idKey: "id",
+  primaryKey: "id",
   labelKey: "itemName",
   singleSelection: false,
   text: "Select",
   selectAllText: "Select all",
   unSelectAllText: "Clear all",
-  clearAllText: "Clear selected items",
   enableCheckAll: true,
   enableSearchFilter: true,
   searchPlaceholderText: "Search",
+  searchBy: ["itemName"],
   badgeShowLimit: 4,
   showClearAll: true,
   maxHeight: 260,
   showCheckbox: true,
   noDataLabel: "No data",
-  theme: "classic",
-  skin: "classic",
-  disabled: false,
   groupBy: "",
   limitSelection: 0,
   lazyLoading: false,
-  lazyPageSize: 40,
+  lazyPageSize: 20,
   appendToBody: false,
   tagToBody: false,
   autoPosition: true,
-  position: "bottom",
-  closeDropDownOnSelection: false,
-  ariaLabel: "Multiselect dropdown",
-  listboxAriaLabel: "Dropdown options"
+  skin: "classic",
+  keyboard: {
+    space: true,
+    spaceOptionAction: "toggle",
+    tab: true,
+    arrows: true,
+    escape: true,
+    backspaceRemovesLastWhenSearchEmpty: false,
+    deleteRemovesFocusedBadge: true
+  }
 }
 ```
 
-| Option | Type | Default | Description |
-| :--- | :--- | :--- | :--- |
-| `idKey` | string | `"id"` | Field used to compare items. |
-| `labelKey` | string | `"itemName"` | Field rendered as the default item label. |
-| `singleSelection` | boolean | `false` | Allows only one selected item. |
-| `text` | string | `"Select"` | Placeholder text when nothing is selected. |
-| `selectAllText` | string | `"Select all"` | Text for the select all action. |
-| `unSelectAllText` | string | `"Clear all"` | Text for the clear all action. |
-| `clearAllText` | string | `"Clear selected items"` | Accessible label for the global clear button. |
-| `enableCheckAll` | boolean | `true` | Shows the select all / clear all row. |
-| `enableSearchFilter` | boolean | `true` | Shows the search input. |
-| `searchPlaceholderText` | string | `"Search"` | Placeholder for the search input. |
-| `badgeShowLimit` | number | `4` | Number of selected chips shown before the counter. |
-| `showClearAll` | boolean | `true` | Shows the global clear selected button. |
-| `maxHeight` | number | `260` | Maximum list height in pixels. |
-| `showCheckbox` | boolean | `true` | Shows checkbox controls beside options. |
-| `noDataLabel` | string | `"No data"` | Empty-state label. |
-| `theme` / `skin` | string | `"classic"` | Skin name used for styling. |
-| `disabled` | boolean | `false` | Disables the control. |
-| `groupBy` | string | `""` | Groups items by the provided object field. |
-| `limitSelection` | number | `0` | Maximum selected items. `0` means no limit. |
-| `lazyLoading` | boolean | `false` | Locally renders the first chunk of a large filtered list. |
-| `lazyPageSize` | number | `40` | Number of rows added per lazy chunk. |
-| `appendToBody` / `tagToBody` | boolean | `false` | Moves the open panel to `document.body` to avoid overflow/dialog clipping. |
-| `autoPosition` | boolean | `true` | Chooses top or bottom when space is constrained. |
-| `position` | string | `"bottom"` | Preferred open direction when `autoPosition` does not override it. |
-| `closeDropDownOnSelection` | boolean | `false` | Closes after selecting an item. |
-| `ariaLabel` | string | `"Multiselect dropdown"` | Accessible name for the combobox trigger. |
-| `listboxAriaLabel` | string | `"Dropdown options"` | Accessible name for the option list. |
+`settings.skin` is the current API. `settings.theme` remains a compatibility alias.
 
-## Skins and Themes
+## Skins
 
 Built-in skins:
 
-- `classic`
-- `material`
-- `dark`
-- `custom`
+| Skin | Usage |
+| :--- | :--- |
+| `classic` | Compact classic dropdown styling. |
+| `material` | Material-style rounded controls and chips. |
+| `dark` | Dark UI surfaces. |
+| `custom` | CSS-variable starter skin for custom projects. |
+| `brand` | Stackline brand skin. |
 
-Switch the skin at runtime:
-
-```js
-dropdown.setTheme("dark");
-```
-
-You can also update only the settings object:
+Runtime skin switching:
 
 ```js
-dropdown.setSettings({
-  theme: "material",
-  skin: "material"
-});
+dropdown.setTheme("material");
 ```
 
-The component adds `theme-{name}` to the internal `.stackline-dropdown` root.
-
-## Custom Skins
-
-Use `custom` when you want the variable-driven layout without naming a new skin:
-
-```js
-dropdown.setTheme("custom");
-```
-
-Use any other name when your app needs a named brand skin. Names outside the built-in skins automatically receive both `theme-{name}` and `theme-custom`.
-
-```js
-dropdown.setTheme("brand");
-```
+Custom skin example:
 
 ```css
-.stackline-dropdown.theme-brand {
+.stackline-dropdown.theme-brand,
+.dropdown-list.theme-brand {
   --stackline-ms-primary: #7c3aed;
   --stackline-ms-primary-soft: rgba(124, 58, 237, 0.14);
   --stackline-ms-surface: #ffffff;
   --stackline-ms-surface-soft: #f5f3ff;
-  --stackline-ms-surface-muted: #ede9fe;
   --stackline-ms-outline: #c4b5fd;
   --stackline-ms-outline-strong: #7c3aed;
   --stackline-ms-on-surface: #22183f;
   --stackline-ms-on-surface-muted: #6b5d80;
   --stackline-ms-chip-bg: #ede9fe;
   --stackline-ms-chip-text: #5b21b6;
-  --stackline-ms-chip-remove: #5b21b6;
-  --stackline-ms-divider: rgba(124, 58, 237, 0.16);
-  --stackline-ms-section-bg: #faf5ff;
 }
 ```
 
-## Custom Templates
+## Render Callbacks
 
 ```js
-new StacklineMultiSelect("#colors", {
-  data: colors,
+new StacklineMultiSelect("#countries", {
+  data: countries,
   selected: [],
-  settings: {
-    text: "Select colors",
-    theme: "material",
-    skin: "material"
+  settings: { primaryKey: "id", labelKey: "itemName", skin: "classic" },
+  renderItem: function (item) {
+    return "<strong>" + item.itemName + "</strong><small>" + item.capital + "</small>";
   },
-  badgeTemplate: function (item) {
-    return '<span class="chip">' + item.itemName + '</span>';
+  renderBadge: function (item) {
+    return item.itemName;
   },
-  itemTemplate: function (item) {
-    return '<strong>' + item.itemName + '</strong><small>' + item.detail + '</small>';
+  renderEmpty: function () {
+    return "No matching countries";
+  },
+  renderMenuFooter: function (context) {
+    return context.selectedItems.length + " selected";
   }
 });
 ```
 
+Legacy names `itemTemplate`, `badgeTemplate`, `emptyTemplate`, and `footerTemplate` are still supported.
+
 ## Events
 
+Callbacks:
+
 ```js
-var dropdown = new StacklineMultiSelect("#countries", {
+new StacklineMultiSelect("#countries", {
   data: countries,
   selected: [],
-  settings: { theme: "material", skin: "material" },
-  onSelect: function (item, instance) {},
-  onDeSelect: function (item, instance) {},
-  onSelectAll: function (items, instance) {},
-  onDeSelectAll: function (items, instance) {},
-  onChange: function (items, instance) {},
-  onOpen: function (items, instance) {},
-  onClose: function (items, instance) {}
+  settings: { primaryKey: "id", labelKey: "itemName" },
+  onSelect: function (item) {},
+  onDeSelect: function (item) {},
+  onDeselect: function (item) {},
+  onSelectAll: function (items) {},
+  onDeSelectAll: function (items) {},
+  onDeselectAll: function (items) {},
+  onChange: function (items) {},
+  onOpen: function (items) {},
+  onClose: function (items) {},
+  onScrollToEnd: function (payload) {}
 });
 ```
 
-| Event | Payload |
-| :--- | :--- |
-| `onSelect` | Selected item |
-| `onDeSelect` | Removed item |
-| `onSelectAll` | Selected items |
-| `onDeSelectAll` | Removed or cleared items |
-| `onChange` | Current selected items |
-| `onOpen` | Current selected items |
-| `onClose` | Current selected items |
-| `onScrollToEnd` | Lazy loading progress object |
-
-## API
+DOM events are also dispatched from the host element:
 
 ```js
-dropdown.setData(items);
-dropdown.setSelected(items);
-dropdown.setSettings({ badgeShowLimit: 2 });
-dropdown.setTheme("dark");
-dropdown.getSelected();
-dropdown.openDropdown();
-dropdown.closeDropdown();
-dropdown.focusSearch();
+document.getElementById("countries").addEventListener("stackline:change", function (event) {
+  console.log(event.detail);
+});
+```
+
+Event names include `stackline:select`, `stackline:deselect`, `stackline:select-all`, `stackline:deselect-all`, `stackline:change`, `stackline:open`, `stackline:close`, and `stackline:scroll-to-end`.
+
+## Methods
+
+```js
+dropdown.open();
+dropdown.close(true);
+dropdown.toggle();
+dropdown.clear();
 dropdown.selectAll();
-dropdown.clearSelection();
+dropdown.deSelectAll();
+dropdown.setSelected([{ id: 2, itemName: "Canada" }]);
+dropdown.setData(nextCountries);
+dropdown.setSettings({ skin: "dark" });
+dropdown.setTheme("brand");
 dropdown.destroy();
 ```
 
-| Method | Description |
+## Official Vanilla Test Matrix
+
+The live app follows the same route structure used by the React `19.1.0` playground. Each route has a live dropdown, code panel, JSON panel, event log, and footer navigation.
+
+| Route | Purpose |
 | :--- | :--- |
-| `setData(items)` | Replaces the option list. |
-| `setSelected(items)` | Replaces the selected items. |
-| `setSettings(settings)` | Merges new settings and re-renders. |
-| `setTheme(name)` | Updates `settings.theme` and `settings.skin`. |
-| `getSelected()` | Returns a copy of the selected items. |
-| `openDropdown()` | Opens the menu. |
-| `closeDropdown()` | Closes the menu. |
-| `focusSearch()` | Opens the menu and focuses the search input. |
-| `selectAll()` | Toggles select all for the current filtered list. |
-| `clearSelection()` | Clears every selected item. |
-| `destroy()` | Removes the component from its host. |
+| `/basic` | Basic usage |
+| `/keyboard-contract` | Keyboard feature switches |
+| `/aria-state` | `aria-selected` and `aria-checked` audit |
+| `/headless-aria` | 100% custom HTML with ARIA prop getters |
+| `/state-hook` | State-only API controls |
+| `/slots-api` | Render callbacks |
+| `/type-safe-factory` | Factory-style plain object helpers |
+| `/async-object-preservation` | Selected objects survive async data refreshes |
+| `/single-selection` | Single selection |
+| `/search-filter` | Search filter |
+| `/custom-search-api` | Async search pattern |
+| `/search-filter-by-property` | Search by multiple object fields |
+| `/search-add-new-item` | Add-new-item workflow |
+| `/group-by` | Grouped object data |
+| `/templating` | Custom row and badge HTML |
+| `/template-driven-forms` | Plain form state |
+| `/reactive-forms` | State-driven validation |
+| `/virtual-scrolling` | Large list scroll |
+| `/lazy-loading-api` | Lazy loading |
+| `/remote-data` | Remote data refresh |
+| `/list-loop` | Repeated instances |
+| `/dialog` | Overflow-hidden dialog test |
+| `/multiple-dropdowns` | Multiple independent instances |
+| `/dynamic-data` | Runtime `setData` |
+| `/methods` | Imperative methods |
+| `/events` | Callback and DOM event stream |
+| `/disabled` | Disabled state |
+| `/limit-selection` | Selection limit |
+| `/limit-badges` | Badge overflow counter |
+| `/all-visible-counter` | Counter disappears when all selected badges are visible |
+| `/custom-placeholder` | Vertically centered placeholder |
+| `/styling` | Skins and variables |
+| `/body-overlay-auto` | Body overlay with auto positioning |
 
 ## Run Locally
 
-Clone the repository and open the demo page:
-
 ```bash
-git clone https://github.com/alexandroit/stackline-multiselect.git
-cd stackline-multiselect
-python3 -m http.server 4317
+npm test
 ```
 
-Then open:
-
-```text
-http://127.0.0.1:4317/
-```
+For a quick static live preview, serve the repository root and open `/basic`.
 
 ## License
 

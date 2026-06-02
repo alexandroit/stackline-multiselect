@@ -67,7 +67,7 @@
   </head>
   <body>
     <main>
-      <h1>Stackline Multiselect Direct Example</h1>
+      <h1>Stackline Multiselect Direct Example 1.1.0</h1>
       <section class="panel">
         <div class="actions">
           <button type="button" data-theme="classic">classic</button>
@@ -95,10 +95,20 @@
         ],
         settings: {
           text: "Select countries",
+          primaryKey: "id",
+          labelKey: "itemName",
           enableSearchFilter: true,
-          theme: "material",
           skin: "material",
-          badgeShowLimit: 2
+          badgeShowLimit: 2,
+          keyboard: {
+            space: true,
+            spaceOptionAction: "toggle",
+            tab: true,
+            arrows: true,
+            escape: true,
+            backspaceRemovesLastWhenSearchEmpty: false,
+            deleteRemovesFocusedBadge: true
+          }
         }
       });
 

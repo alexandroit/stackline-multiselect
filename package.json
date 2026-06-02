@@ -1,7 +1,7 @@
 {
   "name": "@stackline/multiselect",
-  "version": "1.0.5",
-  "description": "Framework-agnostic vanilla JavaScript multiselect dropdown with ADA-compliant keyboard/ARIA support, Stackline skins, search, grouping, templates, body overlays, and direct browser usage.",
+  "version": "1.1.0",
+  "description": "Framework-agnostic vanilla JavaScript multiselect dropdown with headless state APIs, skins, object data, body overlays, and accessibility-focused keyboard/ARIA tested behavior.",
   "main": "src/stackline-multiselect.js",
   "style": "src/stackline-multiselect.css",
   "unpkg": "dist/stackline-multiselect.js",
@@ -11,10 +11,24 @@
     "dropdown",
     "vanilla",
     "javascript",
+    "headless",
+    "state",
+    "renderless",
+    "slots",
+    "custom-renderer",
     "select",
     "search",
+    "combobox",
+    "listbox",
+    "keyboard-navigation",
     "skins",
+    "object-data",
+    "admin-ui",
+    "body-overlay",
+    "modal",
+    "dialog",
     "accessibility",
+    "ada-compliant",
     "aria",
     "ui"
   ],
@@ -28,6 +42,8 @@
   "homepage": "https://alexandro.net/docs/multiselect/",
   "license": "MIT",
   "scripts": {
+    "start": "vite --host 0.0.0.0",
+    "dev": "vite --host 0.0.0.0",
     "test": "node tests/static-smoke.test.cjs"
   },
   "files": [
@@ -36,5 +52,8 @@
     "src/stackline-multiselect.css",
     "LICENSE",
     "README.md"
-  ]
+  ],
+  "devDependencies": {
+    "vite": "8.0.16"
+  }
 }

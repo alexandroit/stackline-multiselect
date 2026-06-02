@@ -3,6 +3,7 @@
 
   var DEFAULT_SETTINGS = {
     idKey: "id",
+    primaryKey: "id",
     labelKey: "itemName",
     singleSelection: false,
     text: "Select",
@@ -38,8 +39,20 @@
     openDropdownAriaLabel: "Open options",
     closeDropdownAriaLabel: "Close options",
     loading: false,
-    loadingText: "Loading options"
+    loadingText: "Loading options",
+    keyboard: {
+      space: true,
+      spaceOptionAction: "toggle",
+      tab: true,
+      arrows: true,
+      escape: true,
+      backspace: false,
+      backspaceRemovesLastWhenSearchEmpty: false,
+      deleteRemovesFocusedBadge: true
+    }
   };
+
+  var DEFAULT_KEYBOARD = DEFAULT_SETTINGS.keyboard;
 
   function assign(target) {
     for (var sourceIndex = 1; sourceIndex < arguments.length; sourceIndex++) {
@@ -70,6 +83,30 @@
     var theme = String(value || "classic").toLowerCase().replace(/[^a-z0-9_-]+/g, "-");
     theme = theme.replace(/^-+|-+$/g, "");
     return theme || "classic";
+  }
+
+  function normalizeSettings(settings) {
+    var normalized = assign({}, settings || {});
+    var idKey = normalized.primaryKey || normalized.idKey || DEFAULT_SETTINGS.primaryKey;
+    normalized.primaryKey = idKey;
+    normalized.idKey = idKey;
+    normalized.labelKey = normalized.labelKey || DEFAULT_SETTINGS.labelKey;
+    normalized.skin = normalizeTheme(normalized.skin || normalized.theme || "classic");
+    normalized.theme = normalized.skin;
+    if (normalized.clearAll !== undefined) {
+      normalized.showClearAll = !!normalized.clearAll;
+    }
+    var rawKeyboard = normalized.keyboard || {};
+    normalized.keyboard = assign({}, DEFAULT_KEYBOARD, rawKeyboard);
+    if (rawKeyboard.backspace !== undefined && rawKeyboard.backspaceRemovesLastWhenSearchEmpty === undefined) {
+      normalized.keyboard.backspaceRemovesLastWhenSearchEmpty = !!rawKeyboard.backspace;
+    }
+    return normalized;
+  }
+
+  function keyboardEnabled(settings, key) {
+    var keyboard = settings && settings.keyboard ? settings.keyboard : DEFAULT_KEYBOARD;
+    return keyboard[key] !== false;
   }
 
   function isActivationKey(event) {
@@ -152,17 +189,22 @@
     options = options || {};
     this.data = asArray(options.data).slice();
     this.selectedItems = asArray(options.selected).slice();
-    this.settings = assign({}, DEFAULT_SETTINGS, options.settings || {});
-    this.itemTemplate = options.itemTemplate;
-    this.badgeTemplate = options.badgeTemplate;
+    this.settings = normalizeSettings(assign({}, DEFAULT_SETTINGS, options.settings || {}));
+    this.itemTemplate = options.itemTemplate || options.renderItem || options.renderOption;
+    this.badgeTemplate = options.badgeTemplate || options.renderBadge;
+    this.emptyTemplate = options.emptyTemplate || options.renderEmpty || options.renderEmptyState;
+    this.footerTemplate = options.footerTemplate || options.renderFooter || options.renderMenuFooter;
     this.handlers = {
       onSelect: options.onSelect,
       onDeSelect: options.onDeSelect,
+      onDeselect: options.onDeselect,
       onSelectAll: options.onSelectAll,
       onDeSelectAll: options.onDeSelectAll,
+      onDeselectAll: options.onDeselectAll,
       onChange: options.onChange,
       onOpen: options.onOpen,
-      onClose: options.onClose
+      onClose: options.onClose,
+      onScrollToEnd: options.onScrollToEnd
     };
     this.filter = "";
     this.isOpen = false;
@@ -207,7 +249,7 @@
   };
 
   StacklineMultiSelect.prototype.setSettings = function (settings) {
-    this.settings = assign({}, this.settings, settings || {});
+    this.settings = normalizeSettings(assign({}, this.settings, settings || {}));
     this.lazyRenderedCount = Number(this.settings.lazyPageSize) || 40;
     this.render();
   };
@@ -215,6 +257,7 @@
   StacklineMultiSelect.prototype.setTheme = function (theme) {
     this.settings.theme = theme;
     this.settings.skin = theme;
+    this.settings = normalizeSettings(this.settings);
     this.render();
   };
 
@@ -246,6 +289,32 @@
     if (typeof this.handlers[name] === "function") {
       this.handlers[name](payload, this);
     }
+    if (name === "onDeSelect" && typeof this.handlers.onDeselect === "function") {
+      this.handlers.onDeselect(payload, this);
+    }
+    if (name === "onDeSelectAll" && typeof this.handlers.onDeselectAll === "function") {
+      this.handlers.onDeselectAll(payload, this);
+    }
+    if (this.host && typeof CustomEvent === "function") {
+      var eventMap = {
+        onSelect: "stackline:select",
+        onDeSelect: "stackline:deselect",
+        onSelectAll: "stackline:select-all",
+        onDeSelectAll: "stackline:deselect-all",
+        onChange: "stackline:change",
+        onOpen: "stackline:open",
+        onClose: "stackline:close",
+        onScrollToEnd: "stackline:scroll-to-end"
+      };
+      var eventName = eventMap[name] || "stackline:" + name.replace(/^on/, "").toLowerCase();
+      this.host.dispatchEvent(new CustomEvent(eventName, {
+        bubbles: true,
+        detail: {
+          value: payload,
+          instance: this
+        }
+      }));
+    }
   };
 
   StacklineMultiSelect.prototype.render = function () {
@@ -273,6 +342,9 @@
     }
     if (this.shouldShowClearAll()) {
       triggerClasses.push("has-clear");
+    }
+    if (this.hiddenBadgeCount() > 0) {
+      triggerClasses.push("has-overflow");
     }
     if (this.selectedItems.length > 0) {
       triggerClasses.push("has-selection");
@@ -309,10 +381,10 @@
       trigger.appendChild(single);
     } else {
       trigger.appendChild(this.renderTokens());
-      if (this.selectedItems.length > this.settings.badgeShowLimit) {
+      if (this.hiddenBadgeCount() > 0) {
         var count = document.createElement("span");
         count.className = "countplaceholder";
-        count.textContent = "+" + (this.selectedItems.length - this.settings.badgeShowLimit);
+        count.textContent = "+" + this.hiddenBadgeCount();
         trigger.appendChild(count);
       }
     }
@@ -348,7 +420,7 @@
     var list = document.createElement("div");
     list.className = "c-list c-chip-list";
 
-    var limit = Number(this.settings.badgeShowLimit) || 0;
+    var limit = this.visibleBadgeLimit();
     var visible = this.selectedItems.slice(0, limit);
 
     for (var index = 0; index < visible.length; index++) {
@@ -379,6 +451,18 @@
     return list;
   };
 
+  StacklineMultiSelect.prototype.visibleBadgeLimit = function () {
+    var limit = Number(this.settings.badgeShowLimit);
+    if (!isFinite(limit) || limit < 0) {
+      return 0;
+    }
+    return limit;
+  };
+
+  StacklineMultiSelect.prototype.hiddenBadgeCount = function () {
+    return Math.max(0, this.selectedItems.length - this.visibleBadgeLimit());
+  };
+
   StacklineMultiSelect.prototype.renderDropdown = function () {
     var dropdown = document.createElement("div");
     var theme = this.getThemeName();
@@ -401,6 +485,10 @@
     dropdown.addEventListener("keydown", this.handleListKeydown.bind(this));
     this.dropdownElement = dropdown;
 
+    if (!this.isOpen) {
+      return dropdown;
+    }
+
     var area = document.createElement("div");
     area.className = "list-area" + (this.settings.singleSelection ? " single-select-mode" : "");
 
@@ -421,6 +509,16 @@
     }
 
     area.appendChild(this.renderOptions());
+    if (typeof this.footerTemplate === "function") {
+      var footer = document.createElement("div");
+      footer.className = "stackline-menu-footer";
+      renderTemplate(footer, this.footerTemplate, {
+        selectedItems: this.getSelected(),
+        filteredItems: this.filteredItems(),
+        settings: this.settings
+      });
+      area.appendChild(footer);
+    }
     dropdown.appendChild(area);
     return dropdown;
   };
@@ -487,7 +585,8 @@
     input.addEventListener("click", function (event) {
       event.stopPropagation();
     });
-    input.addEventListener("keydown", this.handleListKeydown.bind(this));
+    input.addEventListener("keydown", this.handleSearchKeydown.bind(this));
+    input.addEventListener("pointerdown", this.handleSearchPointerDown.bind(this));
 
     filter.appendChild(searchIcon);
     filter.appendChild(input);
@@ -503,7 +602,14 @@
     if (filtered.length === 0) {
       var empty = document.createElement("p");
       empty.className = "list-message";
-      empty.textContent = this.settings.noDataLabel;
+      if (typeof this.emptyTemplate === "function") {
+        renderTemplate(empty, this.emptyTemplate, {
+          query: this.filter,
+          settings: this.settings
+        });
+      } else {
+        empty.textContent = this.settings.noDataLabel;
+      }
       wrapper.appendChild(empty);
       return wrapper;
     }
@@ -601,11 +707,14 @@
     li.tabIndex = disabled ? -1 : 0;
     li.setAttribute("role", "option");
     li.setAttribute("aria-selected", selected ? "true" : "false");
+    li.setAttribute("aria-checked", selected ? "true" : "false");
     li.setAttribute("aria-disabled", disabled ? "true" : "false");
     li.setAttribute("data-stackline-option", "true");
     li.setAttribute("data-key", key);
     li.setAttribute("data-option-index", String(optionIndex));
-    li.addEventListener("click", this.toggleItem.bind(this, item));
+    li.addEventListener("pointerdown", this.handleOptionPointerDown.bind(this, item));
+    li.addEventListener("mousedown", this.handleOptionMouseDown.bind(this, item));
+    li.addEventListener("click", this.handleOptionClick.bind(this, item));
     li.addEventListener("keydown", this.handleOptionKeydown.bind(this, item));
     li.addEventListener("focus", this.handleOptionFocus.bind(this, item));
     li.addEventListener("mouseenter", this.handleOptionMouseEnter.bind(this, item));
@@ -664,6 +773,9 @@
   };
 
   StacklineMultiSelect.prototype.handleTriggerKeydown = function (event) {
+    if ((event.key === " " || event.key === "Spacebar") && !keyboardEnabled(this.settings, "space")) {
+      return;
+    }
     if (isActivationKey(event)) {
       event.preventDefault();
       event.stopPropagation();
@@ -674,19 +786,19 @@
       }
       return;
     }
-    if (event.key === "ArrowDown") {
+    if (event.key === "ArrowDown" && keyboardEnabled(this.settings, "arrows")) {
       event.preventDefault();
       this.openDropdown();
       this.focusFirstOption();
       return;
     }
-    if (event.key === "ArrowUp") {
+    if (event.key === "ArrowUp" && keyboardEnabled(this.settings, "arrows")) {
       event.preventDefault();
       this.openDropdown();
       this.focusLastOption();
       return;
     }
-    if (event.key === "Escape") {
+    if (event.key === "Escape" && keyboardEnabled(this.settings, "escape")) {
       this.closeDropdown(true);
     }
   };
@@ -719,7 +831,7 @@
   };
 
   StacklineMultiSelect.prototype.handleDocumentKeydown = function (event) {
-    if (this.isOpen && event.key === "Escape") {
+    if (this.isOpen && event.key === "Escape" && keyboardEnabled(this.settings, "escape")) {
       this.closeDropdown(true);
     }
   };
@@ -735,18 +847,27 @@
   };
 
   StacklineMultiSelect.prototype.handleInlineButtonKeydown = function (event) {
+    if ((event.key === "Backspace" || event.key === "Delete") && keyboardEnabled(this.settings, "deleteRemovesFocusedBadge")) {
+      var target = event.currentTarget || event.target;
+      if (target && target.classList && target.classList.contains("c-remove") && !target.classList.contains("clear-all")) {
+        event.preventDefault();
+        event.stopPropagation();
+        target.click();
+        return;
+      }
+    }
     if (isActivationKey(event)) {
       event.stopPropagation();
       return;
     }
-    if (event.key === "ArrowDown") {
+    if (event.key === "ArrowDown" && keyboardEnabled(this.settings, "arrows")) {
       event.preventDefault();
       event.stopPropagation();
       this.openDropdown();
       this.focusFirstOption();
       return;
     }
-    if (event.key === "ArrowUp") {
+    if (event.key === "ArrowUp" && keyboardEnabled(this.settings, "arrows")) {
       event.preventDefault();
       event.stopPropagation();
       this.openDropdown();
@@ -755,17 +876,20 @@
   };
 
   StacklineMultiSelect.prototype.handleSelectAllKeydown = function (event) {
+    if ((event.key === " " || event.key === "Spacebar") && !keyboardEnabled(this.settings, "space")) {
+      return;
+    }
     if (isActivationKey(event)) {
       this.toggleSelectAll(event);
       return;
     }
-    if (event.key === "Escape") {
+    if (event.key === "Escape" && keyboardEnabled(this.settings, "escape")) {
       event.preventDefault();
       event.stopPropagation();
       this.closeDropdown(true);
       return;
     }
-    if (event.key === "ArrowDown") {
+    if (event.key === "ArrowDown" && keyboardEnabled(this.settings, "arrows")) {
       event.preventDefault();
       event.stopPropagation();
       this.focusFirstOption();
@@ -773,57 +897,96 @@
   };
 
   StacklineMultiSelect.prototype.handleOptionKeydown = function (item, event) {
-    if (event.key === "Escape") {
+    if (event.key === "Escape" && keyboardEnabled(this.settings, "escape")) {
       event.preventDefault();
       event.stopPropagation();
       this.closeDropdown(true);
       return;
     }
-    if (event.key === "ArrowDown") {
+    if (event.key === "ArrowDown" && keyboardEnabled(this.settings, "arrows")) {
       event.preventDefault();
       event.stopPropagation();
       this.focusRelativeOption(1);
       return;
     }
-    if (event.key === "ArrowUp") {
+    if (event.key === "ArrowUp" && keyboardEnabled(this.settings, "arrows")) {
       event.preventDefault();
       event.stopPropagation();
       this.focusRelativeOption(-1);
       return;
     }
-    if (event.key === "Home") {
+    if (event.key === "Home" && keyboardEnabled(this.settings, "arrows")) {
       event.preventDefault();
       event.stopPropagation();
       this.focusFirstOption();
       return;
     }
-    if (event.key === "End") {
+    if (event.key === "End" && keyboardEnabled(this.settings, "arrows")) {
       event.preventDefault();
       event.stopPropagation();
       this.focusLastOption();
+      return;
+    }
+    if ((event.key === " " || event.key === "Spacebar") && !keyboardEnabled(this.settings, "space")) {
       return;
     }
     if (isActivationKey(event)) {
       event.preventDefault();
       event.stopPropagation();
       this.toggleItem(item, event);
+      if (this.isOpen && (event.key === " " || event.key === "Spacebar") && this.settings.keyboard.spaceOptionAction === "toggle-and-next") {
+        this.focusRelativeOption(1);
+      }
     }
   };
 
   StacklineMultiSelect.prototype.handleListKeydown = function (event) {
-    if (event.key === "Escape") {
+    if (event.key === "Escape" && keyboardEnabled(this.settings, "escape")) {
       event.preventDefault();
       event.stopPropagation();
       this.closeDropdown(true);
       return;
     }
-    if (isTextInputTarget(event.target) && event.key !== "ArrowDown") {
-      return;
+    if (isTextInputTarget(event.target)) {
+      if (event.key === "Backspace" && event.target.value === "" && keyboardEnabled(this.settings, "backspaceRemovesLastWhenSearchEmpty") && this.selectedItems.length) {
+        event.preventDefault();
+        this.removeItem(this.selectedItems[this.selectedItems.length - 1], event);
+      }
+      if (event.key !== "ArrowDown") {
+        return;
+      }
     }
-    if (event.key === "ArrowDown") {
+    if (event.key === "ArrowDown" && keyboardEnabled(this.settings, "arrows")) {
       event.preventDefault();
       event.stopPropagation();
       this.focusFirstOption();
+    }
+  };
+
+  StacklineMultiSelect.prototype.handleOptionClick = function (item, event) {
+    this.captureFocusedOption(event && event.currentTarget);
+    this.toggleItem(item, event);
+  };
+
+  StacklineMultiSelect.prototype.handleSearchKeydown = function (event) {
+    if ((event.key === " " || event.key === "Spacebar") && keyboardEnabled(this.settings, "space")) {
+      return;
+    }
+    this.handleListKeydown(event);
+  };
+
+  StacklineMultiSelect.prototype.handleSearchPointerDown = function () {
+    this.lastInteraction = "pointer";
+  };
+
+  StacklineMultiSelect.prototype.handleOptionPointerDown = function (item, event) {
+    this.lastInteraction = "pointer";
+    this.captureFocusedOption(event && event.currentTarget);
+  };
+
+  StacklineMultiSelect.prototype.handleOptionMouseDown = function (item, event) {
+    if (event && event.currentTarget && typeof event.currentTarget.focus === "function") {
+      event.currentTarget.focus({ preventScroll: true });
     }
   };
 
@@ -962,6 +1125,22 @@
     this.clearSelected(event);
   };
 
+  StacklineMultiSelect.prototype.clear = function (event) {
+    this.clearSelected(event);
+  };
+
+  StacklineMultiSelect.prototype.open = function () {
+    this.openDropdown();
+  };
+
+  StacklineMultiSelect.prototype.close = function (restoreFocus) {
+    this.closeDropdown(restoreFocus);
+  };
+
+  StacklineMultiSelect.prototype.toggle = function (event) {
+    this.toggleDropdown(event);
+  };
+
   StacklineMultiSelect.prototype.selectAll = function (event) {
     this.toggleSelectAll(event);
   };
@@ -1016,10 +1195,11 @@
 
   StacklineMultiSelect.prototype.filteredItems = function () {
     var query = this.filter.trim().toLowerCase();
+    var source = this.sourceItems();
     if (!query) {
-      return this.data.slice();
+      return source;
     }
-    return this.data.filter(function (item) {
+    return source.filter(function (item) {
       var values = [this.itemLabel(item)];
       var keys = Array.isArray(this.settings.searchBy) ? this.settings.searchBy : [];
       for (var index = 0; index < keys.length; index++) {
@@ -1027,6 +1207,20 @@
       }
       return values.join(" ").toLowerCase().indexOf(query) !== -1;
     }, this);
+  };
+
+  StacklineMultiSelect.prototype.sourceItems = function () {
+    var source = this.data.slice();
+    for (var index = 0; index < this.selectedItems.length; index++) {
+      var selected = this.selectedItems[index];
+      var exists = source.some(function (item) {
+        return sameItem(item, selected, this.settings.idKey);
+      }, this);
+      if (!exists) {
+        source.push(selected);
+      }
+    }
+    return source;
   };
 
   StacklineMultiSelect.prototype.itemsForRender = function (items) {
@@ -1130,7 +1324,9 @@
   };
 
   StacklineMultiSelect.prototype.allVisibleSelected = function () {
-    var items = this.filteredItems();
+    var items = this.filteredItems().filter(function (item) {
+      return !itemDisabled(item);
+    });
     return items.length > 0 && items.every(function (item) {
       return this.isSelected(item);
     }, this);
@@ -1430,9 +1626,350 @@
     }
   };
 
+  function createMultiSelectState(options) {
+    options = options || {};
+    var data = asArray(options.data).slice();
+    var selectedItems = asArray(options.selected || options.selectedItems || options.defaultSelectedItems).slice();
+    var settings = normalizeSettings(assign({}, DEFAULT_SETTINGS, options.settings || {}));
+    var query = "";
+    var isOpen = false;
+    var activeKey = "";
+    var instanceId = options.id || "stackline-ms-headless-" + Math.random().toString(36).slice(2);
+
+    function getItemLabel(item) {
+      if (item == null) {
+        return "";
+      }
+      if (typeof item !== "object") {
+        return String(item);
+      }
+      return item[settings.labelKey] != null ? String(item[settings.labelKey]) : "";
+    }
+
+    function getItemKey(item) {
+      var value = itemValue(item, settings.idKey);
+      return value || getItemLabel(item);
+    }
+
+    function isSelected(item) {
+      return selectedItems.some(function (selected) {
+        return sameItem(selected, item, settings.idKey);
+      });
+    }
+
+    function sourceItems() {
+      var source = data.slice();
+      selectedItems.forEach(function (selected) {
+        var exists = source.some(function (item) {
+          return sameItem(item, selected, settings.idKey);
+        });
+        if (!exists) {
+          source.push(selected);
+        }
+      });
+      return source;
+    }
+
+    function filteredItems() {
+      var normalizedQuery = query.trim().toLowerCase();
+      var source = sourceItems();
+      if (!normalizedQuery) {
+        return source;
+      }
+      return source.filter(function (item) {
+        var values = [getItemLabel(item)];
+        var keys = Array.isArray(settings.searchBy) ? settings.searchBy : [];
+        keys.forEach(function (key) {
+          values.push(itemValue(item, key));
+        });
+        return values.join(" ").toLowerCase().indexOf(normalizedQuery) !== -1;
+      });
+    }
+
+    function visibleOptions() {
+      return filteredItems().map(function (item, index) {
+        var key = getItemKey(item);
+        return {
+          item: item,
+          key: key,
+          id: instanceId + "-option-" + index + "-" + String(key).replace(/[^a-zA-Z0-9_-]+/g, "-"),
+          index: index,
+          label: getItemLabel(item),
+          selected: isSelected(item),
+          disabled: itemDisabled(item)
+        };
+      });
+    }
+
+    function selectableItems(items) {
+      return asArray(items).filter(function (item) {
+        return !itemDisabled(item);
+      });
+    }
+
+    function groupedOptions() {
+      var groups = [];
+      var lookup = Object.create(null);
+      visibleOptions().forEach(function (option) {
+        var value = settings.groupBy ? (typeof settings.groupBy === "function" ? settings.groupBy(option.item) : option.item[settings.groupBy]) : "";
+        var key = value || "Options";
+        if (!lookup[key]) {
+          lookup[key] = { name: String(key), items: [] };
+          groups.push(lookup[key]);
+        }
+        lookup[key].items.push(option);
+      });
+      groups.forEach(function (group) {
+        var selectableOptions = group.items.filter(function (option) {
+          return !option.disabled;
+        });
+        group.selected = selectableOptions.length > 0 && selectableOptions.every(function (option) {
+          return option.selected;
+        });
+      });
+      return groups;
+    }
+
+    function notify(type, value) {
+      if (typeof options.onChange === "function") {
+        options.onChange(selectedItems.slice(), type, value, api);
+      }
+      if (type === "select" && typeof options.onSelect === "function") {
+        options.onSelect(value, api);
+      }
+      if (type === "deselect" && typeof options.onDeSelect === "function") {
+        options.onDeSelect(value, api);
+      }
+      if (type === "deselect" && typeof options.onDeselect === "function") {
+        options.onDeselect(value, api);
+      }
+      if (typeof options.onUpdate === "function") {
+        options.onUpdate(api);
+      }
+    }
+
+    function setSelected(nextItems, type, value) {
+      selectedItems = asArray(nextItems).slice();
+      notify(type || "change", value || selectedItems.slice());
+    }
+
+    function toggleItem(item) {
+      if (itemDisabled(item)) {
+        return;
+      }
+      if (isSelected(item)) {
+        setSelected(selectedItems.filter(function (selected) {
+          return !sameItem(selected, item, settings.idKey);
+        }), "deselect", item);
+        return;
+      }
+      if (settings.singleSelection) {
+        setSelected([item], "select", item);
+        isOpen = false;
+        return;
+      }
+      setSelected(selectedItems.concat([item]), "select", item);
+    }
+
+    function clear() {
+      var removed = selectedItems.slice();
+      selectedItems = [];
+      notify("deselectAll", removed);
+    }
+
+    function selectAll() {
+      var next = selectedItems.slice();
+      filteredItems().forEach(function (item) {
+        if (!itemDisabled(item) && !next.some(function (selected) {
+          return sameItem(selected, item, settings.idKey);
+        })) {
+          next.push(item);
+        }
+      });
+      setSelected(next, "selectAll", next);
+    }
+
+    function deselectAll() {
+      clear();
+    }
+
+    function visibleBadges() {
+      var limit = Math.max(0, Number(settings.badgeShowLimit) || 0);
+      return selectedItems.slice(0, limit);
+    }
+
+    function hiddenBadgeCount() {
+      return Math.max(0, selectedItems.length - visibleBadges().length);
+    }
+
+    function label() {
+      if (!selectedItems.length) {
+        return settings.text;
+      }
+      if (settings.singleSelection) {
+        return getItemLabel(selectedItems[0]);
+      }
+      return selectedItems.map(getItemLabel).join(", ");
+    }
+
+    function attrs(extra) {
+      return assign({}, extra || {});
+    }
+
+    var api = {
+      id: instanceId,
+      listboxId: instanceId + "-listbox",
+      get settings() { return settings; },
+      get query() { return query; },
+      get isOpen() { return isOpen; },
+      get selectedItems() { return selectedItems.slice(); },
+      get data() { return data.slice(); },
+      get label() { return label(); },
+      get visibleOptions() { return visibleOptions(); },
+      get groups() { return groupedOptions(); },
+      get visibleBadges() { return visibleBadges(); },
+      get hiddenBadgeCount() { return hiddenBadgeCount(); },
+      get activeKey() { return activeKey; },
+      getItemKey: getItemKey,
+      getItemLabel: getItemLabel,
+      isSelected: isSelected,
+      setData: function (nextData) { data = asArray(nextData).slice(); if (typeof options.onUpdate === "function") { options.onUpdate(api); } },
+      setSelected: function (items) { setSelected(items, "change", items); },
+      setQuery: function (value) { query = String(value || ""); if (typeof options.onUpdate === "function") { options.onUpdate(api); } },
+      open: function () { isOpen = true; if (typeof options.onUpdate === "function") { options.onUpdate(api); } },
+      close: function () { isOpen = false; activeKey = ""; if (typeof options.onUpdate === "function") { options.onUpdate(api); } },
+      toggleOpen: function () { isOpen = !isOpen; if (typeof options.onUpdate === "function") { options.onUpdate(api); } },
+      toggleItem: toggleItem,
+      removeItem: function (item) { if (isSelected(item)) { toggleItem(item); } },
+      clear: clear,
+      clearAll: clear,
+      selectAll: selectAll,
+      deselectAll: deselectAll,
+      toggleGroup: function (groupName, items) {
+        var selectable = selectableItems(items);
+        var allSelected = selectable.length > 0 && selectable.every(isSelected);
+        if (allSelected) {
+          setSelected(selectedItems.filter(function (selected) {
+            return !selectable.some(function (item) {
+              return sameItem(selected, item, settings.idKey);
+            });
+          }), "deselectAll", selectable);
+        } else {
+          var next = selectedItems.slice();
+          selectable.forEach(function (item) {
+            if (!next.some(function (selected) {
+              return sameItem(selected, item, settings.idKey);
+            })) {
+              next.push(item);
+            }
+          });
+          setSelected(next, "selectAll", selectable);
+        }
+      },
+      getRootProps: function (extra) {
+        return attrs(assign({
+          "data-stackline-multiselect": "true",
+          "data-open": isOpen ? "true" : "false"
+        }, extra || {}));
+      },
+      getTriggerProps: function (extra) {
+        return attrs(assign({
+          type: "button",
+          role: "combobox",
+          "aria-expanded": isOpen ? "true" : "false",
+          "aria-haspopup": "listbox",
+          "aria-controls": instanceId + "-listbox",
+          "aria-activedescendant": activeKey ? instanceId + "-option-" + activeKey : undefined,
+          onclick: function () { api.toggleOpen(); },
+          onkeydown: function (event) {
+            if (isActivationKey(event)) {
+              event.preventDefault();
+              api.toggleOpen();
+            }
+          }
+        }, extra || {}));
+      },
+      getSearchInputProps: function (extra) {
+        return attrs(assign({
+          type: "search",
+          value: query,
+          placeholder: settings.searchPlaceholderText,
+          "aria-label": settings.searchAriaLabel,
+          oninput: function (event) { api.setQuery(event.target.value); },
+          onkeydown: function (event) {
+            if (event.key === "Escape") {
+              event.preventDefault();
+              api.close();
+            }
+          }
+        }, extra || {}));
+      },
+      getListboxProps: function (extra) {
+        return attrs(assign({
+          id: instanceId + "-listbox",
+          role: "listbox",
+          "aria-label": settings.listboxAriaLabel,
+          "aria-multiselectable": settings.singleSelection ? "false" : "true"
+        }, extra || {}));
+      },
+      getOptionProps: function (option, extra) {
+        return attrs(assign({
+          id: option.id,
+          role: "option",
+          tabindex: option.disabled ? "-1" : "0",
+          "aria-selected": option.selected ? "true" : "false",
+          "aria-checked": option.selected ? "true" : "false",
+          "aria-disabled": option.disabled ? "true" : "false",
+          onclick: function () { activeKey = option.key; api.toggleItem(option.item); },
+          onfocus: function () { activeKey = option.key; },
+          onkeydown: function (event) {
+            if (isActivationKey(event)) {
+              event.preventDefault();
+              activeKey = option.key;
+              api.toggleItem(option.item);
+            }
+            if (event.key === "Escape") {
+              event.preventDefault();
+              api.close();
+            }
+          }
+        }, extra || {}));
+      },
+      getRemoveButtonProps: function (item, extra) {
+        return attrs(assign({
+          type: "button",
+          "aria-label": settings.removeItemAriaLabel + ": " + getItemLabel(item),
+          onclick: function () { api.removeItem(item); }
+        }, extra || {}));
+      },
+      getClearAllButtonProps: function (extra) {
+        return attrs(assign({
+          type: "button",
+          "aria-label": settings.clearAllText,
+          onclick: clear
+        }, extra || {}));
+      }
+    };
+
+    return api;
+  }
+
+  function createMultiSelect(target, options) {
+    return new StacklineMultiSelect(target, options);
+  }
+
+  StacklineMultiSelect.createState = createMultiSelectState;
+  StacklineMultiSelect.createMultiSelectState = createMultiSelectState;
+  StacklineMultiSelect.create = createMultiSelect;
   global.StacklineMultiSelect = StacklineMultiSelect;
+  global.createStacklineMultiSelect = createMultiSelect;
+  global.createStacklineMultiSelectState = createMultiSelectState;
 
   if (typeof module !== "undefined" && module.exports) {
     module.exports = StacklineMultiSelect;
+    module.exports.StacklineMultiSelect = StacklineMultiSelect;
+    module.exports.createStacklineMultiSelect = createMultiSelect;
+    module.exports.createMultiSelectState = createMultiSelectState;
+    module.exports.createStacklineMultiSelectState = createMultiSelectState;
   }
 })(typeof window !== "undefined" ? window : globalThis);

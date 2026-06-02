@@ -12,16 +12,17 @@ function read(file) {
 test("package exposes the Verdaccio validation version", () => {
   const pkg = JSON.parse(read("package.json"));
   assert.equal(pkg.name, "@stackline/multiselect");
-  assert.equal(pkg.version, "1.0.5");
+  assert.equal(pkg.version, "1.1.0");
 });
 
-test("source includes ADA-friendly combobox/listbox semantics", () => {
+test("source includes accessibility-focused combobox/listbox semantics", () => {
   const source = read("src/stackline-multiselect.js");
   assert.match(source, /role", "combobox"/);
   assert.match(source, /role", "listbox"/);
   assert.match(source, /role", "option"/);
   assert.match(source, /aria-activedescendant/);
   assert.match(source, /aria-selected/);
+  assert.match(source, /aria-checked/);
   assert.match(source, /function isActivationKey/);
   assert.match(source, /c-arrow-toggle/);
   assert.match(source, /c-remove/);
@@ -33,6 +34,33 @@ test("source includes ADA-friendly combobox/listbox semantics", () => {
   assert.match(source, /renderableItems/);
   assert.match(source, /groupItems/);
   assert.match(source, /preventScroll/);
+});
+
+test("source includes React 19.1.x parity APIs", () => {
+  const source = read("src/stackline-multiselect.js");
+  assert.match(source, /primaryKey/);
+  assert.match(source, /createMultiSelectState/);
+  assert.match(source, /createStacklineMultiSelectState/);
+  assert.match(source, /getTriggerProps/);
+  assert.match(source, /getOptionProps/);
+  assert.match(source, /getSearchInputProps/);
+  assert.match(source, /spaceOptionAction/);
+  assert.match(source, /backspaceRemovesLastWhenSearchEmpty/);
+  assert.match(source, /deleteRemovesFocusedBadge/);
+  assert.match(source, /sourceItems/);
+  assert.match(source, /renderItem/);
+  assert.match(source, /renderBadge/);
+  assert.match(source, /renderMenuFooter/);
+  assert.match(source, /stackline:select/);
+  assert.match(source, /stackline:change/);
+});
+
+test("select all state ignores disabled visible options", () => {
+  const source = read("src/stackline-multiselect.js");
+  assert.match(source, /allVisibleSelected[\s\S]*filteredItems\(\)\.filter/);
+  assert.match(source, /allVisibleSelected[\s\S]*!itemDisabled\(item\)/);
+  assert.match(source, /selectableOptions[\s\S]*!option\.disabled/);
+  assert.match(source, /selectableItems\(items\)/);
 });
 
 test("source includes body overlay and cleanup behavior", () => {
@@ -47,9 +75,27 @@ test("source includes body overlay and cleanup behavior", () => {
 test("styles include focus states, brand skin, and overlay rules", () => {
   const styles = read("src/stackline-multiselect.css");
   assert.match(styles, /\.dropdown-list\.body-overlay/);
+  assert.match(styles, /\.dropdown-list\.body-overlay[\s\S]*background: var\(--ms-surface, #ffffff\)/);
   assert.match(styles, /\.stackline-dropdown\.theme-brand/);
   assert.match(styles, /\.stackline-dropdown\.theme-classic \.c-btn/);
   assert.match(styles, /padding: 10px 68px 10px 10px/);
   assert.match(styles, /box-shadow: 0 1px 5px #959595/);
   assert.match(styles, /:focus-visible/);
+});
+
+test("live app includes the React parity route matrix", () => {
+  const demo = read("src/demo.js");
+  [
+    "basic",
+    "keyboard-contract",
+    "aria-state",
+    "headless-aria",
+    "state-hook",
+    "slots-api",
+    "type-safe-factory",
+    "async-object-preservation",
+    "body-overlay-auto",
+    "all-visible-counter"
+  ].forEach((route) => assert.match(demo, new RegExp(route)));
+  assert.match(demo, /Samoa/);
 });

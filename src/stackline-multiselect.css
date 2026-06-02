@@ -203,10 +203,21 @@ button.c-arrow-toggle:disabled {
   position: absolute;
   top: 50%;
   right: 76px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
   transform: translateY(-50%);
   color: var(--ms-on-surface-muted, #5f6368);
   font-size: 0.8rem;
   font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.c-btn.has-overflow {
+  padding-right: 94px;
 }
 
 .c-angle-down,
@@ -333,6 +344,14 @@ button.c-arrow-toggle:disabled {
 .btn-container {
   padding: 10px 14px 14px;
   text-align: center;
+}
+
+.stackline-menu-footer {
+  padding: 10px 14px 14px;
+  border-top: 1px solid rgba(125, 119, 134, 0.16);
+  background: var(--ms-surface, #ffffff);
+  color: var(--ms-on-surface-muted, #5f6368);
+  font-size: 0.85rem;
 }
 
 .btn-iceblue {
@@ -630,6 +649,10 @@ button.c-arrow-toggle:disabled {
   color: #333333;
   font-size: 14px;
   line-height: 1.35;
+}
+
+.stackline-dropdown.theme-classic .c-btn.has-overflow {
+  padding-right: 94px;
 }
 
 .stackline-dropdown.theme-classic .c-btn.is-active,
@@ -1136,6 +1159,8 @@ c-icon svg {
   position: fixed;
   right: auto;
   max-width: calc(100vw - 16px);
+  border-radius: 22px;
+  background: var(--ms-surface, #ffffff);
   z-index: 100000;
 }
 
