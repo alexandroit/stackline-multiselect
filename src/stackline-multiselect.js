@@ -1055,6 +1055,12 @@
       return;
     }
     if (this.isSelected(item)) {
+      if (this.settings.singleSelection) {
+        this.isOpen = false;
+        this.render();
+        this.focusTrigger();
+        return;
+      }
       this.removeItem(item, event);
       return;
     }
@@ -1758,6 +1764,13 @@
         return;
       }
       if (isSelected(item)) {
+        if (settings.singleSelection) {
+          isOpen = false;
+          if (typeof options.onUpdate === "function") {
+            options.onUpdate(api);
+          }
+          return;
+        }
         setSelected(selectedItems.filter(function (selected) {
           return !sameItem(selected, item, settings.idKey);
         }), "deselect", item);

@@ -9,10 +9,10 @@ function read(file) {
   return fs.readFileSync(path.join(root, file), "utf8");
 }
 
-test("package exposes the Verdaccio validation version", () => {
+test("package exposes the published validation version", () => {
   const pkg = JSON.parse(read("package.json"));
   assert.equal(pkg.name, "@stackline/multiselect");
-  assert.equal(pkg.version, "1.1.0");
+  assert.equal(pkg.version, "1.1.1");
 });
 
 test("source includes accessibility-focused combobox/listbox semantics", () => {
@@ -53,6 +53,12 @@ test("source includes React 19.1.x parity APIs", () => {
   assert.match(source, /renderMenuFooter/);
   assert.match(source, /stackline:select/);
   assert.match(source, /stackline:change/);
+});
+
+test("single-selection contract keeps the active item selected", () => {
+  const source = read("src/stackline-multiselect.js");
+  assert.match(source, /this\.isSelected\(item\)[\s\S]*this\.settings\.singleSelection[\s\S]*this\.isOpen = false[\s\S]*this\.focusTrigger\(\)/);
+  assert.match(source, /isSelected\(item\)[\s\S]*settings\.singleSelection[\s\S]*isOpen = false[\s\S]*options\.onUpdate/);
 });
 
 test("select all state ignores disabled visible options", () => {

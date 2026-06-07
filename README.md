@@ -8,13 +8,13 @@
 [![Vanilla JS](https://img.shields.io/badge/Vanilla-JavaScript-f7df1e?style=flat-square&logo=javascript&logoColor=111)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 [![Community](https://img.shields.io/badge/Reddit-Stackline-ff4500?style=flat-square&logo=reddit&logoColor=white)](https://www.reddit.com/r/Stackline/)
 
-**[Documentation & Live Demos](https://alexandro.net/docs/multiselect/)** | **[Direct Download](https://github.com/alexandroit/stackline-multiselect/releases/download/v1.1.0/stackline-multiselect-1.1.0.zip)** | **[StackBlitz](https://stackblitz.com/github/alexandroit/stackline-multiselect?file=docs%2Fmain.js&startScript=start&initialpath=%2Fbasic)** | **[npm](https://www.npmjs.com/package/@stackline/multiselect)** | **[Issues](https://github.com/alexandroit/stackline-multiselect/issues)** | **[Repository](https://github.com/alexandroit/stackline-multiselect)**
+**[Documentation & Live Demos](https://alexandro.net/docs/multiselect/)** | **[Direct Download](https://github.com/alexandroit/stackline-multiselect/releases/download/v1.1.1/stackline-multiselect-1.1.1.zip)** | **[StackBlitz](https://stackblitz.com/github/alexandroit/stackline-multiselect?file=docs%2Fmain.js&startScript=start&initialpath=%2Fbasic)** | **[npm](https://www.npmjs.com/package/@stackline/multiselect)** | **[Issues](https://github.com/alexandroit/stackline-multiselect/issues)** | **[Repository](https://github.com/alexandroit/stackline-multiselect)**
 
 <p align="center">
   <img src="https://alexandro.net/images/public/2026/06/dropdownlist.gif" alt="@stackline/multiselect live dropdown preview" width="420">
 </p>
 
-**Latest vanilla release:** `1.1.0`
+**Latest vanilla release:** `1.1.1`
 
 ---
 
@@ -28,7 +28,7 @@
 
 The package ships a styled component API and a lower-level state API. Start with `new StacklineMultiSelect(...)` for forms, filters, dashboards, and admin screens. Use `createStacklineMultiSelectState(...)` when your application needs to own every element and CSS class while keeping Stackline selection, filtering, grouping, keyboard handling, ARIA props, and callbacks.
 
-The `1.1.x` line ports the React `19.1.0` combobox-contract work to vanilla JavaScript: selected object preservation, `aria-selected` plus `aria-checked`, configurable keyboard behavior, focus fixes after mouse selection, headless/state prop getters, render callbacks, body overlays for clipped dialogs, and the same 64-country live test matrix.
+The `1.1.x` line ports the React `19.1.3` combobox-contract work to vanilla JavaScript: selected object preservation, `aria-selected` plus `aria-checked`, configurable keyboard behavior, focus fixes after mouse selection, headless/state prop getters, render callbacks, body overlays for clipped dialogs, and the same 64-country live test matrix.
 
 ## Features
 
@@ -74,7 +74,7 @@ The `1.1.x` line ports the React `19.1.0` combobox-contract work to vanilla Java
 ## Installation
 
 ```bash
-npm install @stackline/multiselect@1.1.0 --save-exact
+npm install @stackline/multiselect@1.1.1 --save-exact
 ```
 
 Use this package when your project needs direct browser usage without Angular, React, Vue, or a bundler.
@@ -96,7 +96,7 @@ Use this option first when the project installs packages with npm.
 Use the direct download when your project does not use npm:
 
 ```text
-https://github.com/alexandroit/stackline-multiselect/releases/download/v1.1.0/stackline-multiselect-1.1.0.zip
+https://github.com/alexandroit/stackline-multiselect/releases/download/v1.1.1/stackline-multiselect-1.1.1.zip
 ```
 
 Extract the archive and reference the copied files:
@@ -405,7 +405,7 @@ dropdown.destroy();
 
 ## Official Vanilla Test Matrix
 
-The live app follows the same route structure used by the React `19.1.0` playground. Each route has a live dropdown, code panel, JSON panel, event log, and footer navigation.
+The live app follows the same route structure used by the React `19.1.3` playground. Each route has a live dropdown, code panel, JSON panel, event log, and footer navigation.
 
 | Route | Purpose |
 | :--- | :--- |
