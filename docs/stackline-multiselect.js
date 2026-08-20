@@ -54,11 +54,15 @@
 
   var DEFAULT_KEYBOARD = DEFAULT_SETTINGS.keyboard;
 
+  function isUnsafeKey(key) {
+    return key === "__proto__" || key === "prototype" || key === "constructor";
+  }
+
   function assign(target) {
     for (var sourceIndex = 1; sourceIndex < arguments.length; sourceIndex++) {
       var source = arguments[sourceIndex] || {};
       for (var key in source) {
-        if (Object.prototype.hasOwnProperty.call(source, key)) {
+        if (Object.prototype.hasOwnProperty.call(source, key) && !isUnsafeKey(key)) {
           target[key] = source[key];
         }
       }
@@ -259,7 +263,11 @@
   };
 
   StacklineMultiSelect.prototype.setSettings = function (settings) {
-    this.settings = normalizeSettings(assign({}, this.settings, settings || {}));
+    var nextSettings = settings || {};
+    var keyboard = Object.prototype.hasOwnProperty.call(nextSettings, "keyboard")
+      ? assign({}, this.settings.keyboard, nextSettings.keyboard || {})
+      : this.settings.keyboard;
+    this.settings = normalizeSettings(assign({}, this.settings, nextSettings, { keyboard: keyboard }));
     this.lazyRenderedCount = Number(this.settings.lazyPageSize) || 40;
     this.render();
   };
@@ -1158,7 +1166,14 @@
   };
 
   StacklineMultiSelect.prototype.selectAll = function (event) {
-    this.toggleSelectAll(event);
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+    if (this.settings.disabled || this.allVisibleSelected() || this.filteredItems().length === 0) {
+      return;
+    }
+    this.toggleSelectAll();
   };
 
   StacklineMultiSelect.prototype.deSelectAll = function (event) {
@@ -1673,6 +1688,11 @@
       });
     }
 
+    function isLimitReached(item) {
+      var limit = Number(settings.limitSelection) || 0;
+      return limit > 0 && !isSelected(item) && selectedItems.length >= limit;
+    }
+
     function sourceItems() {
       var source = data.slice();
       selectedItems.forEach(function (selected) {
@@ -1712,14 +1732,14 @@
           index: index,
           label: getItemLabel(item),
           selected: isSelected(item),
-          disabled: itemDisabled(item)
+          disabled: itemDisabled(item) || isLimitReached(item)
         };
       });
     }
 
     function selectableItems(items) {
       return asArray(items).filter(function (item) {
-        return !itemDisabled(item);
+        return !itemDisabled(item) && !isLimitReached(item);
       });
     }
 
@@ -1770,7 +1790,7 @@
     }
 
     function toggleItem(item) {
-      if (itemDisabled(item)) {
+      if (itemDisabled(item) || isLimitReached(item)) {
         return;
       }
       if (isSelected(item)) {
@@ -1802,7 +1822,11 @@
 
     function selectAll() {
       var next = selectedItems.slice();
+      var limit = Number(settings.limitSelection) || 0;
       filteredItems().forEach(function (item) {
+        if (limit > 0 && next.length >= limit) {
+          return;
+        }
         if (!itemDisabled(item) && !next.some(function (selected) {
           return sameItem(selected, item, settings.idKey);
         })) {
@@ -1880,6 +1904,10 @@
         } else {
           var next = selectedItems.slice();
           selectable.forEach(function (item) {
+            var limit = Number(settings.limitSelection) || 0;
+            if (limit > 0 && next.length >= limit) {
+              return;
+            }
             if (!next.some(function (selected) {
               return sameItem(selected, item, settings.idKey);
             })) {
@@ -1991,6 +2019,8 @@
   if (typeof module !== "undefined" && module.exports) {
     module.exports = StacklineMultiSelect;
     module.exports.StacklineMultiSelect = StacklineMultiSelect;
+    module.exports.create = createMultiSelect;
+    module.exports.createState = createMultiSelectState;
     module.exports.createStacklineMultiSelect = createMultiSelect;
     module.exports.createMultiSelectState = createMultiSelectState;
     module.exports.createStacklineMultiSelectState = createMultiSelectState;

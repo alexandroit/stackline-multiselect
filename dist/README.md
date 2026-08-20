@@ -8,13 +8,13 @@
 [![Vanilla JS](https://img.shields.io/badge/Vanilla-JavaScript-f7df1e?style=flat-square&logo=javascript&logoColor=111)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 [![Community](https://img.shields.io/badge/Reddit-Stackline-ff4500?style=flat-square&logo=reddit&logoColor=white)](https://www.reddit.com/r/Stackline/)
 
-**[Documentation & Live Demos](https://alexandro.net/docs/multiselect/)** | **[Direct Download](https://github.com/alexandroit/stackline-multiselect/releases/download/v1.1.2/stackline-multiselect-1.1.2.zip)** | **[StackBlitz](https://stackblitz.com/github/alexandroit/stackline-multiselect?file=docs%2Fmain.js&startScript=start&initialpath=%2Fbasic)** | **[npm](https://www.npmjs.com/package/@stackline/multiselect)** | **[Issues](https://github.com/alexandroit/stackline-multiselect/issues)** | **[Repository](https://github.com/alexandroit/stackline-multiselect)**
+**[Documentation & Live Demos](https://alexandro.net/docs/multiselect/)** | **[Direct Download](https://github.com/alexandroit/stackline-multiselect/releases/download/v1.1.3/stackline-multiselect-1.1.3.zip)** | **[StackBlitz](https://stackblitz.com/github/alexandroit/stackline-multiselect?file=docs%2Fmain.js&startScript=start&initialpath=%2Fbasic)** | **[npm](https://www.npmjs.com/package/@stackline/multiselect)** | **[Issues](https://github.com/alexandroit/stackline-multiselect/issues)** | **[Repository](https://github.com/alexandroit/stackline-multiselect)**
 
 <p align="center">
   <img src="https://alexandro.net/images/public/2026/06/dropdownlist.gif" alt="@stackline/multiselect live dropdown preview" width="420">
 </p>
 
-**Latest vanilla release:** `1.1.2`
+**Latest vanilla release:** `1.1.3`
 
 ---
 
@@ -52,6 +52,8 @@ The `1.1.x` line ports the React `19.1.3` combobox-contract work to vanilla Java
 | Selected object preservation across async data refreshes | Yes |
 | Dialog and overflow-container support through `appendToBody` / `tagToBody` | Yes |
 | Direct browser download | Yes |
+| Generic TypeScript declarations | Yes |
+| Shadow DOM-safe outside clicks | Yes |
 
 ## Table of Contents
 
@@ -74,10 +76,12 @@ The `1.1.x` line ports the React `19.1.3` combobox-contract work to vanilla Java
 ## Installation
 
 ```bash
-npm install @stackline/multiselect@1.1.2 --save-exact
+npm install @stackline/multiselect@1.1.3 --save-exact
 ```
 
 Use this package when your project needs direct browser usage without Angular, React, Vue, or a bundler.
+
+The package has no runtime npm dependencies. Its declarations are compatible with TypeScript 3.9 and current TypeScript releases.
 
 ## Option 1: npm Usage
 
@@ -96,7 +100,7 @@ Use this option first when the project installs packages with npm.
 Use the direct download when your project does not use npm:
 
 ```text
-https://github.com/alexandroit/stackline-multiselect/releases/download/v1.1.2/stackline-multiselect-1.1.2.zip
+https://github.com/alexandroit/stackline-multiselect/releases/download/v1.1.3/stackline-multiselect-1.1.3.zip
 ```
 
 Extract the archive and reference the copied files:
@@ -146,6 +150,28 @@ Extract the archive and reference the copied files:
 ```
 
 `idKey` is still accepted for compatibility. New examples use `primaryKey`.
+
+### TypeScript
+
+The constructor and headless state APIs infer the item type:
+
+```ts
+import StacklineMultiSelect = require("@stackline/multiselect");
+
+interface Country {
+  id: number;
+  itemName: string;
+  region: string;
+}
+
+const dropdown = new StacklineMultiSelect<Country>("#countries", {
+  data: countries,
+  settings: { primaryKey: "id", labelKey: "itemName" },
+  onChange: (selected) => console.log(selected[0]?.region)
+});
+```
+
+CommonJS, direct browser globals, historical deep imports, and plain JavaScript usage remain unchanged.
 
 ## Customization Paths
 
@@ -354,6 +380,8 @@ new StacklineMultiSelect("#countries", {
 ```
 
 Legacy names `itemTemplate`, `badgeTemplate`, `emptyTemplate`, and `footerTemplate` are still supported.
+
+String results from render callbacks are interpreted as trusted HTML for compatibility. Do not concatenate untrusted values into those strings. Return a DOM node built with `textContent` when callback data can come from users or external systems. Default labels and messages already use `textContent`.
 
 ## Events
 

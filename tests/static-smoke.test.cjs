@@ -12,7 +12,7 @@ function read(file) {
 test("package exposes the published validation version", () => {
   const pkg = JSON.parse(read("package.json"));
   assert.equal(pkg.name, "@stackline/multiselect");
-  assert.equal(pkg.version, "1.1.2");
+  assert.equal(pkg.version, "1.1.3");
 });
 
 test("source includes accessibility-focused combobox/listbox semantics", () => {
@@ -84,6 +84,23 @@ test("outside click detection is safe inside Shadow DOM", () => {
   assert.match(source, /event\.composedPath/);
   assert.match(source, /eventPathIncludes\(event, this\.root\)/);
   assert.match(source, /eventPathIncludes\(event, this\.dropdownElement\)/);
+});
+
+test("configuration assignment rejects prototype control keys", () => {
+  const source = read("src/stackline-multiselect.js");
+  assert.match(source, /function isUnsafeKey/);
+  assert.match(source, /key === "__proto__"/);
+  assert.match(source, /key === "prototype"/);
+  assert.match(source, /key === "constructor"/);
+});
+
+test("package ships maintained TypeScript declarations", () => {
+  const pkg = JSON.parse(read("package.json"));
+  assert.equal(pkg.types, "types/stackline-multiselect.d.ts");
+  const declarations = read(pkg.types);
+  assert.match(declarations, /declare class StacklineMultiSelect/);
+  assert.match(declarations, /interface State/);
+  assert.match(declarations, /createStacklineMultiSelectState/);
 });
 
 test("styles include focus states, brand skin, and overlay rules", () => {
