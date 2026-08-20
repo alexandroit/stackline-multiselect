@@ -41,7 +41,7 @@ for (const [name, source] of archiveFiles) {
 
 const output = zipSync(archive, {
   level: 9,
-  mtime: new Date("2000-01-01T00:00:00.000Z")
+  mtime: new Date(2000, 0, 1, 0, 0, 0)
 });
 fs.writeFileSync(path.join(dist, `stackline-multiselect-${pkg.version}.zip`), output);
 
