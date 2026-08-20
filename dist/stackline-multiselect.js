@@ -121,6 +121,16 @@
     return target && target.closest ? target.closest("button") : null;
   }
 
+  function eventPathIncludes(event, element) {
+    if (!event || !element) {
+      return false;
+    }
+    if (typeof event.composedPath === "function") {
+      return event.composedPath().indexOf(element) !== -1;
+    }
+    return element.contains(event.target);
+  }
+
   function sameItem(a, b, idKey) {
     if (!a || !b) {
       return false;
@@ -822,7 +832,7 @@
     if (!this.isOpen) {
       return;
     }
-    if ((this.root && this.root.contains(event.target)) || (this.dropdownElement && this.dropdownElement.contains(event.target))) {
+    if (eventPathIncludes(event, this.root) || eventPathIncludes(event, this.dropdownElement)) {
       return;
     }
     if (this.root) {

@@ -12,7 +12,7 @@ function read(file) {
 test("package exposes the published validation version", () => {
   const pkg = JSON.parse(read("package.json"));
   assert.equal(pkg.name, "@stackline/multiselect");
-  assert.equal(pkg.version, "1.1.1");
+  assert.equal(pkg.version, "1.1.2");
 });
 
 test("source includes accessibility-focused combobox/listbox semantics", () => {
@@ -76,6 +76,14 @@ test("source includes body overlay and cleanup behavior", () => {
   assert.match(source, /document\.body\.appendChild/);
   assert.match(source, /removeBodyDropdown/);
   assert.match(source, /updateDropdownPosition/);
+});
+
+test("outside click detection is safe inside Shadow DOM", () => {
+  const source = read("src/stackline-multiselect.js");
+  assert.match(source, /function eventPathIncludes/);
+  assert.match(source, /event\.composedPath/);
+  assert.match(source, /eventPathIncludes\(event, this\.root\)/);
+  assert.match(source, /eventPathIncludes\(event, this\.dropdownElement\)/);
 });
 
 test("styles include focus states, brand skin, and overlay rules", () => {
