@@ -32,7 +32,7 @@ const versionFiles = [
   "docs/llms-full.txt"
 ];
 for (const file of versionFiles) {
-  assert.match(fs.readFileSync(path.join(root, file), "utf8"), new RegExp(pkg.version.replace(/\./g, "\\.")), `${file} must mention ${pkg.version}`);
+  assert.ok(fs.readFileSync(path.join(root, file), "utf8").includes(pkg.version), `${file} must mention ${pkg.version}`);
 }
 
 const zipFiles = fs.readdirSync(path.join(root, "dist")).filter((file) => /^stackline-multiselect-\d+\.\d+\.\d+\.zip$/.test(file));

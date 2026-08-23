@@ -2,6 +2,12 @@
 
 All notable changes to `@stackline/multiselect` are documented here.
 
+## Unreleased
+
+- Replaced theme edge trimming with a linear scan, added adversarial-input
+  coverage, and removed dynamic regular-expression construction from release
+  verification.
+
 ## 1.1.3 - 2026-08-19
 
 - Added generic TypeScript declarations for the styled and headless APIs, tested with TypeScript 3.9 and 7.0.

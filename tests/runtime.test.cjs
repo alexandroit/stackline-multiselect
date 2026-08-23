@@ -137,6 +137,23 @@ test("settings and prop bags reject prototype control keys", () => {
   }
 });
 
+test("theme normalization handles adversarial runs with linear work", () => {
+  const environment = createEnvironment();
+  try {
+    const state = environment.StacklineMultiSelect.createStacklineMultiSelectState({
+      settings: { skin: `${"-".repeat(150_000)}dark` }
+    });
+
+    assert.equal(state.settings.skin, "dark");
+    const secondState = environment.StacklineMultiSelect.createStacklineMultiSelectState({
+      settings: { skin: `left${"?".repeat(150_000)}right` }
+    });
+    assert.equal(secondState.settings.skin, "left-right");
+  } finally {
+    destroyEnvironment(environment);
+  }
+});
+
 test("headless selection limits apply to item, group, and select-all actions", () => {
   const environment = createEnvironment();
   try {

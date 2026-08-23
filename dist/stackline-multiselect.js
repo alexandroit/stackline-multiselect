@@ -85,7 +85,11 @@
 
   function normalizeTheme(value) {
     var theme = String(value || "classic").toLowerCase().replace(/[^a-z0-9_-]+/g, "-");
-    theme = theme.replace(/^-+|-+$/g, "");
+    var start = 0;
+    var end = theme.length;
+    while (start < end && theme.charCodeAt(start) === 45) start += 1;
+    while (end > start && theme.charCodeAt(end - 1) === 45) end -= 1;
+    theme = theme.slice(start, end);
     return theme || "classic";
   }
 
