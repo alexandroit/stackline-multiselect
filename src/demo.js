@@ -1,7 +1,7 @@
 (function () {
   "use strict";
 
-  var VERSION = "1.1.3";
+  var VERSION = "1.1.4";
   var STACKBLITZ_BASE = "https://stackblitz.com/github/alexandroit/stackline-multiselect";
   var routeList = [
     ["basic", "Basic usage"],

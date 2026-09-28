@@ -35,10 +35,9 @@ for (const file of versionFiles) {
   assert.ok(fs.readFileSync(path.join(root, file), "utf8").includes(pkg.version), `${file} must mention ${pkg.version}`);
 }
 
-const zipFiles = fs.readdirSync(path.join(root, "dist")).filter((file) => /^stackline-multiselect-\d+\.\d+\.\d+\.zip$/.test(file));
-assert.deepEqual(zipFiles, [`stackline-multiselect-${pkg.version}.zip`]);
-
-const archive = unzipSync(new Uint8Array(fs.readFileSync(path.join(root, "dist", zipFiles[0]))));
+const archivePath = path.join(root, "dist", `stackline-multiselect-${pkg.version}.zip`);
+assert.ok(fs.existsSync(archivePath), "the current direct-download ZIP must exist");
+const archive = unzipSync(new Uint8Array(fs.readFileSync(archivePath)));
 for (const file of ["stackline-multiselect.js", "stackline-multiselect.css", "direct-example.html", "README.md"]) {
   assert.ok(archive[file], `${file} must exist in the direct-download ZIP`);
   assert.deepEqual(Buffer.from(archive[file]), fs.readFileSync(path.join(root, "dist", file)));

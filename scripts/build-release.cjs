@@ -20,12 +20,6 @@ for (const [source, target] of copies) {
   fs.copyFileSync(path.join(root, source), path.join(root, target));
 }
 
-for (const file of fs.readdirSync(dist)) {
-  if (/^stackline-multiselect-\d+\.\d+\.\d+\.zip$/.test(file) && file !== `stackline-multiselect-${pkg.version}.zip`) {
-    fs.rmSync(path.join(dist, file));
-  }
-}
-
 const archiveFiles = [
   ["stackline-multiselect.js", "dist/stackline-multiselect.js"],
   ["stackline-multiselect.css", "dist/stackline-multiselect.css"],

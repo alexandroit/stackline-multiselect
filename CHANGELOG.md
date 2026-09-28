@@ -2,7 +2,11 @@
 
 All notable changes to `@stackline/multiselect` are documented here.
 
-## Unreleased
+## 1.1.4 - 2026-09-28
+
+- Organize the README with package links and the Stackline Reddit community.
+- Refine npm discovery keywords and publish verified artifacts through GitHub Actions.
+- Preserve historical direct-download archives while shipping only the current archive in npm.
 
 - Replaced theme edge trimming with a linear scan, added adversarial-input
   coverage, and removed dynamic regular-expression construction from release

@@ -12,7 +12,7 @@ function read(file) {
 test("package exposes the published validation version", () => {
   const pkg = JSON.parse(read("package.json"));
   assert.equal(pkg.name, "@stackline/multiselect");
-  assert.equal(pkg.version, "1.1.3");
+  assert.equal(pkg.version, "1.1.4");
 });
 
 test("source includes accessibility-focused combobox/listbox semantics", () => {
