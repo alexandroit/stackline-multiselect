@@ -753,7 +753,7 @@
   }
 
   function navigate(slug) {
-    window.history.pushState(null, "", "/" + slug);
+    window.history.pushState(null, "", "#/" + slug);
     window.scrollTo({ top: 0, left: 0 });
     renderApp();
   }
@@ -768,7 +768,7 @@
     var nav = element("nav", "footer-link-grid");
     routeList.forEach(function (route) {
       var link = element("a", route.slug === activeSlug ? "active" : "");
-      link.href = "/" + route.slug;
+      link.href = "#/" + route.slug;
       link.appendChild(element("span", "route-title", route.title));
       link.appendChild(element("span", "route-path", "/" + route.slug));
       link.addEventListener("click", function (event) {
@@ -793,6 +793,13 @@
     var topbar = element("header", "topbar");
     topbar.appendChild(element("p", "eyebrow", "Vanilla JavaScript runtime"));
     topbar.appendChild(element("h1", "", "@stackline/multiselect " + VERSION));
+    var install = element("p", "example-copy");
+    install.appendChild(element("code", "", "npm install @stackline/multiselect@" + VERSION + " --save-exact"));
+    topbar.appendChild(install);
+    var download = element("a", "stackblitz-row-link", "Download " + VERSION + " ZIP");
+    download.href = "./downloads/stackline-multiselect-" + VERSION + ".zip";
+    download.setAttribute("download", "");
+    topbar.appendChild(download);
     main.appendChild(topbar);
     var docs = element("section", "docs-main");
     renderRouteContent(docs, slug);

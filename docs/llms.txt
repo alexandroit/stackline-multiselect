@@ -11,6 +11,7 @@ Install: npm install @stackline/multiselect@1.1.4 --save-exact
 - Canonical docs: https://alexandro.net/docs/multiselect/
 - Live examples: https://alexandro.net/docs/multiselect/#/basic
 - StackBlitz: https://stackblitz.com/github/alexandroit/stackline-multiselect?file=docs%2Fmain.js&startScript=start&initialpath=%2Fbasic
+- Direct ZIP: https://alexandro.net/docs/multiselect/downloads/stackline-multiselect-1.1.4.zip
 - npm: https://www.npmjs.com/package/@stackline/multiselect
 - GitHub: https://github.com/alexandroit/stackline-multiselect
 - Community: https://www.reddit.com/r/Stackline/
