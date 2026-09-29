@@ -1,6 +1,6 @@
 {
   "name": "@stackline/multiselect",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "description": "Framework-agnostic vanilla JavaScript multiselect dropdown with headless state APIs, skins, object data, body overlays, and accessibility-focused keyboard/ARIA tested behavior.",
   "type": "commonjs",
   "main": "src/stackline-multiselect.js",
@@ -10,7 +10,10 @@
   "jsdelivr": "dist/stackline-multiselect.js",
   "keywords": [
     "stackline",
+    "npm-package",
     "multiselect",
+    "javascript",
+    "typescript",
     "dropdown",
     "select",
     "combobox",
@@ -20,8 +23,6 @@
     "keyboard-navigation",
     "accessibility",
     "aria",
-    "javascript",
-    "typescript",
     "browser",
     "framework-agnostic"
   ],

@@ -1,12 +1,46 @@
 # @stackline/multiselect
 
-> A maintained vanilla JavaScript multiselect dropdown for framework-agnostic applications, with object data, skins, render callbacks, headless/state APIs, body-overlay positioning, and accessibility-focused and keyboard/ARIA tested behavior.
+> Framework-agnostic vanilla JavaScript multiselect dropdown with headless state APIs, skins, object data, body overlays, and accessibility-focused keyboard/ARIA tested behavior.
 
 [![npm version](https://img.shields.io/npm/v/@stackline/multiselect.svg?style=flat-square)](https://www.npmjs.com/package/@stackline/multiselect)
-[![npm monthly](https://img.shields.io/npm/dm/@stackline/multiselect.svg?style=flat-square)](https://www.npmjs.com/package/@stackline/multiselect)
-[![license](https://img.shields.io/npm/l/@stackline/multiselect.svg?style=flat-square)](https://github.com/alexandroit/stackline-multiselect/blob/main/LICENSE)
-[![Vanilla JS](https://img.shields.io/badge/Vanilla-JavaScript-f7df1e?style=flat-square&logo=javascript&logoColor=111)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
-[![Community](https://img.shields.io/badge/Reddit-Stackline-ff4500?style=flat-square&logo=reddit&logoColor=white)](https://www.reddit.com/r/Stackline/)
+[![license](https://img.shields.io/npm/l/@stackline/multiselect.svg?style=flat-square)](https://github.com/alexandroit/stackline-multiselect)
+[![GitHub repository](https://img.shields.io/badge/GitHub-alexandroit%2Fstackline-multiselect-181717?style=flat-square&logo=github)](https://github.com/alexandroit/stackline-multiselect)
+[![Docs](https://img.shields.io/badge/docs-alexandro.net-0f766e?style=flat-square)](https://alexandro.net/docs/multiselect/)
+[![Reddit community](https://img.shields.io/badge/community-r%2FStackline-ff4500?style=flat-square&logo=reddit&logoColor=white)](https://www.reddit.com/r/Stackline/)
+
+**[Documentation](https://alexandro.net/docs/multiselect/)** | **[npm](https://www.npmjs.com/package/@stackline/multiselect)** | **[Issues](https://github.com/alexandroit/stackline-multiselect/issues)** | **[Repository](https://github.com/alexandroit/stackline-multiselect)**
+
+**Current package version:** `1.1.5`
+
+---
+
+## Why this package?
+
+`@stackline/multiselect` is maintained as part of the Stackline package collection.
+
+## Compatibility
+
+| Item | Value |
+| :--- | :--- |
+| Package | `@stackline/multiselect@1.1.5` |
+| API target | `See the package-specific API reference` |
+| Supported Node.js | `See supported framework requirements` |
+| License | `MIT` |
+| Module type | `commonjs` |
+| Main entry | `src/stackline-multiselect.js` |
+| Types | `types/stackline-multiselect.d.ts` |
+| Runtime dependencies | `none` |
+
+## Installation
+
+```bash
+npm install @stackline/multiselect
+```
+
+## Usage and API reference
+
+> A maintained vanilla JavaScript multiselect dropdown for framework-agnostic applications, with object data, skins, render callbacks, headless/state APIs, body-overlay positioning, and accessibility-focused and keyboard/ARIA tested behavior.
+
 
 **[Documentation & Live Demos](https://alexandro.net/docs/multiselect/)** | **[Direct Download](https://github.com/alexandroit/stackline-multiselect/raw/refs/heads/main/dist/stackline-multiselect-1.1.4.zip)** | **[StackBlitz](https://stackblitz.com/github/alexandroit/stackline-multiselect?file=docs%2Fmain.js&startScript=start&initialpath=%2Fbasic)** | **[npm](https://www.npmjs.com/package/@stackline/multiselect)** | **[Issues](https://github.com/alexandroit/stackline-multiselect/issues)** | **[Repository](https://github.com/alexandroit/stackline-multiselect)**
 
@@ -78,7 +112,7 @@ The `1.1.x` line ports the React `19.1.3` combobox-contract work to vanilla Java
 ## Installation
 
 ```bash
-npm install @stackline/multiselect@1.1.4 --save-exact
+npm install @stackline/multiselect@1.1.5 --save-exact
 ```
 
 Use this package when your project needs direct browser usage without Angular, React, Vue, or a bundler.
@@ -499,3 +533,20 @@ Join r/Stackline to share examples, ask usage questions, and discuss releases.
 ## License
 
 MIT
+
+## Credits and original authors
+
+- Copyright (c) 2026 Stackline.
+- Stackline maintenance: [Alexandro Paixao Marques](https://www.linkedin.com/in/aleinfo/) and [Stackline contributors](https://github.com/alexandroit).
+
+Original copyright, license notices and contributor acknowledgements remain part of this distribution. Stackline maintenance does not replace authorship of the original work.
+
+## Community and Links
+
+- [Stackline website](https://alexandro.net/)
+- [GitHub projects](https://github.com/alexandroit)
+- [npm packages](https://www.npmjs.com/~alex360qc)
+- [Reddit community — r/Stackline](https://www.reddit.com/r/Stackline/)
+- [Maintainer LinkedIn](https://www.linkedin.com/in/aleinfo/)
+
+Use this repository's issue tracker for reproducible bugs and feature requests. Join r/Stackline for examples, usage questions and release discussions.
