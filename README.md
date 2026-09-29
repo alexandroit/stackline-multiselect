@@ -4,13 +4,13 @@
 
 [![npm version](https://img.shields.io/npm/v/@stackline/multiselect.svg?style=flat-square)](https://www.npmjs.com/package/@stackline/multiselect)
 [![license](https://img.shields.io/npm/l/@stackline/multiselect.svg?style=flat-square)](https://github.com/alexandroit/stackline-multiselect)
-[![GitHub repository](https://img.shields.io/badge/GitHub-alexandroit%2Fstackline-multiselect-181717?style=flat-square&logo=github)](https://github.com/alexandroit/stackline-multiselect)
+[![GitHub repository](https://img.shields.io/badge/GitHub-repository-181717?style=flat-square&logo=github)](https://github.com/alexandroit/stackline-multiselect)
 [![Docs](https://img.shields.io/badge/docs-alexandro.net-0f766e?style=flat-square)](https://alexandro.net/docs/multiselect/)
 [![Reddit community](https://img.shields.io/badge/community-r%2FStackline-ff4500?style=flat-square&logo=reddit&logoColor=white)](https://www.reddit.com/r/Stackline/)
 
 **[Documentation](https://alexandro.net/docs/multiselect/)** | **[npm](https://www.npmjs.com/package/@stackline/multiselect)** | **[Issues](https://github.com/alexandroit/stackline-multiselect/issues)** | **[Repository](https://github.com/alexandroit/stackline-multiselect)**
 
-**Current package version:** `1.1.5`
+**Current package version:** `1.1.6`
 
 ---
 
@@ -22,7 +22,7 @@
 
 | Item | Value |
 | :--- | :--- |
-| Package | `@stackline/multiselect@1.1.5` |
+| Package | `@stackline/multiselect@1.1.6` |
 | API target | `See the package-specific API reference` |
 | Supported Node.js | `See supported framework requirements` |
 | License | `MIT` |
@@ -48,7 +48,7 @@ npm install @stackline/multiselect
   <img src="https://alexandro.net/images/public/2026/06/dropdownlist.gif" alt="@stackline/multiselect live dropdown preview" width="420">
 </p>
 
-**Latest vanilla release:** `1.1.4`
+**Latest vanilla release:** `1.1.6`
 
 ---
 
@@ -112,7 +112,7 @@ The `1.1.x` line ports the React `19.1.3` combobox-contract work to vanilla Java
 ## Installation
 
 ```bash
-npm install @stackline/multiselect@1.1.5 --save-exact
+npm install @stackline/multiselect@1.1.6 --save-exact
 ```
 
 Use this package when your project needs direct browser usage without Angular, React, Vue, or a bundler.
