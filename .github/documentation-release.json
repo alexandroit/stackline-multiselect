@@ -1,0 +1,34 @@
+{
+  "repository": "alexandroit/stackline-multiselect",
+  "packages": [
+    {
+      "name": "@stackline/multiselect",
+      "path": "README.md",
+      "version": "1.1.5",
+      "baselineVersion": "1.1.4",
+      "keywords": [
+        "stackline",
+        "npm-package",
+        "multiselect",
+        "javascript",
+        "typescript",
+        "dropdown",
+        "select",
+        "combobox",
+        "listbox",
+        "headless",
+        "search",
+        "keyboard-navigation",
+        "accessibility",
+        "aria",
+        "browser",
+        "framework-agnostic"
+      ],
+      "homepage": "https://alexandro.net/docs/multiselect/",
+      "baselineTarball": "https://registry.npmjs.org/@stackline/multiselect/-/multiselect-1.1.4.tgz",
+      "baselineIntegrity": "sha512-cigBC/rlaRo6+bNA7dHkbgYFrAdElC99JnVU7DnczAQUUpf1pa/8pHJmahcNF75OH6OyUyLOjK3tGvUAt+cLjQ==",
+      "expectedSha512": "22f056328a509784002dae64830454d6aa0ec8ef5eb333108c62eb613e2c9a503d00a94c15db1887e7693185824a13f62eb9894dd490a3e75e8c41bf2460a6ef",
+      "tag": "docs-stackline-multiselect-v1.1.5"
+    }
+  ]
+}
