@@ -9,10 +9,11 @@ function read(file) {
   return fs.readFileSync(path.join(root, file), "utf8");
 }
 
-test("package exposes the published validation version", () => {
+test("package version matches its distributed archive", () => {
   const pkg = JSON.parse(read("package.json"));
   assert.equal(pkg.name, "@stackline/multiselect");
-  assert.equal(pkg.version, "1.1.4");
+  assert.match(pkg.version, /^\d+\.\d+\.\d+$/);
+  assert.ok(pkg.files.includes(`dist/stackline-multiselect-${pkg.version}.zip`));
 });
 
 test("source includes accessibility-focused combobox/listbox semantics", () => {

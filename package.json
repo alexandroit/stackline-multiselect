@@ -1,6 +1,6 @@
 {
   "name": "@stackline/multiselect",
-  "version": "1.1.6",
+  "version": "1.1.7",
   "description": "Framework-agnostic vanilla JavaScript multiselect dropdown with headless state APIs, skins, object data, body overlays, and accessibility-focused keyboard/ARIA tested behavior.",
   "type": "commonjs",
   "main": "src/stackline-multiselect.js",
@@ -56,7 +56,7 @@
     "dist/stackline-multiselect.css",
     "dist/direct-example.html",
     "dist/README.md",
-    "dist/stackline-multiselect-1.1.4.zip",
+    "dist/stackline-multiselect-1.1.7.zip",
     "src/stackline-multiselect.js",
     "src/stackline-multiselect.css",
     "types",
@@ -67,9 +67,9 @@
   ],
   "devDependencies": {
     "fflate": "0.8.3",
-    "happy-dom": "20.11.6",
+    "happy-dom": "21.0.4",
     "typescript": "7.0.2",
     "typescript39": "npm:typescript@3.9.10",
-    "vite": "8.2.1"
+    "vite": "8.3.5"
   }
 }

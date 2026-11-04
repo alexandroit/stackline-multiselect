@@ -10,7 +10,7 @@
 
 **[Documentation](https://alexandro.net/docs/multiselect/)** | **[npm](https://www.npmjs.com/package/@stackline/multiselect)** | **[Issues](https://github.com/alexandroit/stackline-multiselect/issues)** | **[Repository](https://github.com/alexandroit/stackline-multiselect)**
 
-**Current package version:** `1.1.6`
+**Current package version:** `1.1.7`
 
 ---
 
@@ -22,7 +22,7 @@
 
 | Item | Value |
 | :--- | :--- |
-| Package | `@stackline/multiselect@1.1.6` |
+| Package | `@stackline/multiselect@1.1.7` |
 | API target | `See the package-specific API reference` |
 | Supported Node.js | `See supported framework requirements` |
 | License | `MIT` |
@@ -48,7 +48,7 @@ npm install @stackline/multiselect
   <img src="https://alexandro.net/images/public/2026/06/dropdownlist.gif" alt="@stackline/multiselect live dropdown preview" width="420">
 </p>
 
-**Latest vanilla release:** `1.1.6`
+**Latest vanilla release:** `1.1.7`
 
 ---
 
@@ -112,7 +112,7 @@ The `1.1.x` line ports the React `19.1.3` combobox-contract work to vanilla Java
 ## Installation
 
 ```bash
-npm install @stackline/multiselect@1.1.6 --save-exact
+npm install @stackline/multiselect@1.1.7 --save-exact
 ```
 
 Use this package when your project needs direct browser usage without Angular, React, Vue, or a bundler.

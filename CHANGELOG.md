@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.7 — 2026-11-04
+
+- Publish updated development dependencies with security fixes.
+- Validate and publish using patched supported Node.js releases.
+- Keep release archives and package version checks synchronized.
+
 All notable changes to `@stackline/multiselect` are documented here.
 
 ## 1.1.4 - 2026-09-28
